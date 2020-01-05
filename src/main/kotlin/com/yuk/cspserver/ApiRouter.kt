@@ -1,7 +1,5 @@
 package com.yuk.cspserver
 
-import com.yuk.cspserver.archive.ArchiveHandler
-import com.yuk.cspserver.archive.storage.StorageHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -9,8 +7,7 @@ import org.springframework.web.reactive.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.coRouter
 
 @Configuration
-class ApiRouter(private val storageHandler: StorageHandler,
-                private val archiveHandler: ArchiveHandler) {
+class ApiRouter() {
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }

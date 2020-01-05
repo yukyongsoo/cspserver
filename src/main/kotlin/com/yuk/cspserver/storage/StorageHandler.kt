@@ -1,4 +1,4 @@
-package com.yuk.cspserver.archive.storage
+package com.yuk.cspserver.storage
 
 import org.springframework.stereotype.Component
 
