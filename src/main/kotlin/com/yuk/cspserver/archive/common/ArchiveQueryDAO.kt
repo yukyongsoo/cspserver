@@ -1,4 +1,4 @@
-package com.yuk.cspserver.archive
+package com.yuk.cspserver.archive.common
 
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.r2dbc.core.DatabaseClient
@@ -6,10 +6,10 @@ import org.springframework.data.r2dbc.core.flow
 import org.springframework.stereotype.Component
 
 @Component
-class ArchiveDAO(private val databaseClient: DatabaseClient) {
-    suspend fun getAllArchive(): Map<String, Archive> {
+class ArchiveQueryDAO(private val databaseClient: DatabaseClient) {
+    suspend fun getAllArchive(): Map<String, ArchiveDTO> {
         val archiveList = databaseClient.select().from(ArchiveEntity::class.java)
-                .`as`(Archive::class.java)
+                .`as`(ArchiveDTO::class.java)
                 .flow().toList()
         return archiveList.associateBy { it.name }
     }

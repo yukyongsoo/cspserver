@@ -1,4 +1,4 @@
 package com.yuk.cspserver.storage
 
-class StorageDAO {
+class StorageQueryDAO {
 }
