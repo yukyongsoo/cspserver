@@ -1,4 +1,3 @@
 package com.yuk.cspserver.content.type
 
-class ContentTypeDTO {
-}
+data class ContentTypeDTO(val name : String)

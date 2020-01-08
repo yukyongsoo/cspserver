@@ -37,6 +37,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
     fun setContentRouter() = coRouter {
         "/content".nest {
             POST("",contentHandler::createContent)
+            GET("/{id}",contentHandler::getContent)
         }
     }
 }
