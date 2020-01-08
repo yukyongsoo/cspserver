@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArchiveQueryDAO(private val databaseClient: DatabaseClient) {
-    suspend fun getAllArchive(): Map<String, ArchiveDTO> {
-        val archiveList = databaseClient.select().from(ArchiveEntity::class.java)
+    suspend fun getAllArchive() =
+        databaseClient.select().from(ArchiveEntity::class.java)
                 .`as`(ArchiveDTO::class.java)
                 .flow().toList()
-        return archiveList.associateBy { it.name }
-    }
 }

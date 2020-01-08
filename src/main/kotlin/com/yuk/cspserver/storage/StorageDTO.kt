@@ -1,3 +1,3 @@
 package com.yuk.cspserver.storage
 
-data class StorageDTO(val archiveName : String, val name : String)
+data class StorageDTO(val archiveId: Int, val storageId: String)

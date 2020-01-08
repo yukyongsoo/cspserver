@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArchiveManager{
-    private var archiveStorageMap = mapOf<String,List<StorageDTO>>()
+    private var archiveStorageMap = mapOf<Int,List<StorageDTO>>()
 
     fun setArchiveStorage(storageList: List<StorageDTO>) {
-        archiveStorageMap = storageList.groupBy { it.archiveName }
+        archiveStorageMap = storageList.groupBy { it.archiveId }
     }
 }

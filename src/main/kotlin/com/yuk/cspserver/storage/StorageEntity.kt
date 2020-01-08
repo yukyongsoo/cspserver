@@ -1,4 +1,6 @@
 package com.yuk.cspserver.storage
 
-class StorageEntity {
-}
+import org.springframework.data.relational.core.mapping.Table
+
+@Table("CSP_STORAGE")
+data class StorageEntity(val id: Int, val name: String)
