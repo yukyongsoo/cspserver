@@ -22,8 +22,10 @@ class ContentHandler(private val contentService: ContentService) {
     suspend fun createContentElement(serverRequest: ServerRequest) : ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
         val elementTypeId = serverRequest.queryParamOrNull("typeId")?.toInt() ?: throw IllegalArgumentException("query String elementTypeId not Found")
-        val fileParts = serverRequest.awaitMultipartData()["file"] ?: throw IllegalArgumentException("data part not found")
-        val element = ElementRequestDTO(contentId,elementTypeId, fileParts.map { SpringFilePart(it as FilePart) })
+        val fileParts = serverRequest.awaitMultipartData()["file"] ?: throw IllegalArgumentException("file part not found")
+        val file = if(fileParts.size ==  1) fileParts[0] as FilePart
+                else  throw IllegalArgumentException("only one file upload for save. you have ${fileParts.size}")
+        val element = ElementRequestDTO(contentId,elementTypeId, SpringFilePart(file))
         return ServerResponse.created(URI.create(contentService.createContentElement(element))).buildAndAwait()
     }
 }

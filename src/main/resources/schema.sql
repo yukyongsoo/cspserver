@@ -54,6 +54,4 @@ create table CSP_ELEMENT
     foreign key (TYPE) references CSP_ELEMENT_TYPE(ID)
 );
 
-
-
-
+-- make content_element_file for element save

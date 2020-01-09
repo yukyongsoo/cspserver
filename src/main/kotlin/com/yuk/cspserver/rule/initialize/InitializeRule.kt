@@ -1,4 +1,5 @@
 package com.yuk.cspserver.rule.initialize
 
-class InitializeRule {
-}
+data class InitializeRule(val id : Int,
+                          val name : String,
+                          val archiveId : Int)

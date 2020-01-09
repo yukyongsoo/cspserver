@@ -12,11 +12,11 @@ class ElementService(private val elementTypeService: ElementTypeService,
     suspend fun createElement(element: ElementRequestDTO): String {
         val elementType = elementTypeService.getType(element.elementTypeId)
         val initializeRules = ruleService.getInitializeRule(elementType.id)
+        //TODO :: make element Id
+        val elementId = ""
         initializeRules.forEach {
-
-
-
+            //archiveService.saveFile(it.archiveId,elementId, element.file)
         }
-        return ""
+        return "/storage/${element.contentId}/$elementId"
     }
 }
