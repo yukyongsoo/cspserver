@@ -5,9 +5,8 @@ import com.yuk.cspserver.content.ContentHandler
 import com.yuk.cspserver.storage.StorageHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.buildAndAwait
-import org.springframework.web.reactive.function.server.coRouter
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.server.*
 
 @Configuration
 class ApiRouter(private val storageHandler: StorageHandler,
@@ -17,6 +16,8 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }
+
+
     }
 
     @Bean
@@ -36,8 +37,8 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setContentRouter() = coRouter {
         "/content".nest {
-            POST("",contentHandler::createContent)
-            GET("/{id}",contentHandler::getContent)
+            POST("").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::createContent)
+            GET("/{id}").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::getContent)
         }
     }
 }

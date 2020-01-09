@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ContentTypeService(private val contentTypeQueryDAO: ContentTypeQueryDAO) {
-    suspend fun getElementType(contentTypeName : String): ContentTypeDTO? =
-        contentTypeQueryDAO.getTypeByName(contentTypeName)?.let {
+    suspend fun getElementType(contentTypeId : Int): ContentTypeDTO? =
+        contentTypeQueryDAO.getType(contentTypeId)?.let {
             ContentTypeDTO(it.name)
         }
 }

@@ -1,7 +1,7 @@
-package com.yuk.cspserver.element
+package com.yuk.cspserver.rule
 
 import org.springframework.stereotype.Component
 
 @Component
-class ElementHandler {
+class RuleManager {
 }

@@ -18,10 +18,10 @@ create table CSP_STORAGE
 
 create table CSP_ARCHIVE_STORAGE
 (
-    ARCHIVEID int,
-    foreign key (ARCHIVEID) references CSP_ARCHIVE(ID),
-    STORAGEID int,
-    foreign key (STORAGEID) references CSP_STORAGE(ID)
+    ARCHIVE_ID int,
+    foreign key (ARCHIVE_ID) references CSP_ARCHIVE(ID),
+    STORAGE_ID int,
+    foreign key (STORAGE_ID) references CSP_STORAGE(ID)
 );
 
 create table CSP_CONTENT_TYPE
@@ -33,10 +33,26 @@ create table CSP_CONTENT_TYPE
 create table CSP_CONTENT
 (
     ID varchar(45) primary key,
-    TYPE varchar(30),
-    foreign key (TYPE) references CSP_CONTENT_TYPE(NAME)
+    TYPE_ID varchar(30),
+    foreign key (TYPE_ID) references CSP_CONTENT_TYPE(ID)
 );
 
+
+create table CSP_ELEMENT_TYPE
+(
+    ID int auto_increment primary key ,
+    NAME varchar(30)
+);
+
+create table CSP_ELEMENT
+(
+    ID int auto_increment primary key ,
+    NAME varchar(128),
+    CONTENT_ID varchar(45),
+    foreign key (CONTENT_ID) references CSP_CONTENT(ID),
+    TYPE int,
+    foreign key (TYPE) references CSP_ELEMENT_TYPE(ID)
+);
 
 
 
