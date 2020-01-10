@@ -1,7 +1,7 @@
 package com.yuk.cspserver.content
 
 import com.yuk.cspserver.element.ElementRequestDTO
-import com.yuk.cspserver.element.file.SpringFilePart
+import com.yuk.cspserver.element.file.filepart.ElementFilePart
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.*
@@ -25,7 +25,7 @@ class ContentHandler(private val contentService: ContentService) {
         val fileParts = serverRequest.awaitMultipartData()["file"] ?: throw IllegalArgumentException("file part not found")
         val file = if(fileParts.size ==  1) fileParts[0] as FilePart
                 else  throw IllegalArgumentException("only one file upload for save. you have ${fileParts.size}")
-        val element = ElementRequestDTO(contentId,elementTypeId, SpringFilePart(file))
+        val element = ElementRequestDTO(contentId,elementTypeId, ElementFilePart(file))
         return ServerResponse.created(URI.create(contentService.createContentElement(element))).buildAndAwait()
     }
 }

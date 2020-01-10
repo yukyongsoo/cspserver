@@ -17,6 +17,9 @@ class ElementService(private val elementTypeService: ElementTypeService,
         initializeRules.forEach {
             //archiveService.saveFile(it.archiveId,elementId, element.file)
         }
+
+
+
         return "/storage/${element.contentId}/$elementId"
     }
 }
