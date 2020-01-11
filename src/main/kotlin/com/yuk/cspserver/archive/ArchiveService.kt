@@ -1,6 +1,7 @@
 package com.yuk.cspserver.archive
 
 import com.yuk.cspserver.archive.common.ArchiveQueryDAO
+import com.yuk.cspserver.element.file.filepart.ElementFile
 import com.yuk.cspserver.storage.StorageService
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -16,4 +17,8 @@ class ArchiveService(private val archiveManager: ArchiveManager,
     }
 
     suspend fun getAllArchive() = archiveQueryDAO.getAllArchive()
+
+    suspend fun saveFile(archiveId: Int, elementId: Any, elementFile: ElementFile) {
+
+    }
 }

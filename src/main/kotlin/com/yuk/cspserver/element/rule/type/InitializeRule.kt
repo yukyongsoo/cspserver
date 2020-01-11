@@ -1,4 +1,4 @@
-package com.yuk.cspserver.rule.initialize
+package com.yuk.cspserver.element.rule.type
 
 data class InitializeRule(val id : Int,
                           val name : String,
