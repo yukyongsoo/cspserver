@@ -5,7 +5,11 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("CSP_ELEMENT")
-data class ElementEntity(@Id val id: Int,
-                         @Column("CONTENT_ID") val contentId: String,
+data class ElementEntity(@Column("CONTENT_ID") val contentId: String,
                          val type : Int,
                          val name : String)
+
+data class ElementReadEntity(@Id val id : Int,
+                             @Column("CONTENT_ID") val contentId: String,
+                             val type : Int,
+                             val name : String)

@@ -18,7 +18,9 @@ class ArchiveService(private val archiveManager: ArchiveManager,
 
     suspend fun getAllArchive() = archiveQueryDAO.getAllArchive()
 
-    suspend fun saveFile(archiveId: Int, elementId: Any, elementFile: ElementFile) {
+    suspend fun saveFile(archiveId: Int, elementId: Int, elementFile: ElementFile) {
+
+
 
     }
 }

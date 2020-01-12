@@ -6,7 +6,4 @@ import org.springframework.stereotype.Component
 @Component
 class ElementQueryDAO(private val databaseClient: DatabaseClient) {
 
-    fun createElement(name: String, contentId: String, id: Int) {
-
-    }
 }
