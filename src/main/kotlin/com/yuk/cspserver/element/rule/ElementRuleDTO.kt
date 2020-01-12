@@ -1,6 +1,4 @@
-package com.yuk.cspserver.element.rule.type
-
-import com.yuk.cspserver.element.rule.ElementRuleType
+package com.yuk.cspserver.element.rule
 
 abstract class ElementRuleDTO(val elementTypeId: Int,
                               val ruleId: Int,

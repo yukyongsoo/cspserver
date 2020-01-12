@@ -1,6 +1,6 @@
 package com.yuk.cspserver.element.rule
 
-import com.yuk.cspserver.element.rule.type.InitializeRuleDTO
+import com.yuk.cspserver.element.rule.initalize.InitializeRuleDTO
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.data.r2dbc.core.DatabaseClient

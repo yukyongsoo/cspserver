@@ -1,6 +1,7 @@
-package com.yuk.cspserver.element.rule.type
+package com.yuk.cspserver.element.rule.initalize
 
 import com.yuk.cspserver.element.rule.ElementRuleType
+import com.yuk.cspserver.element.rule.ElementRuleDTO
 
 class InitializeRuleDTO(elementTypeId: Int,
                         ruleId: Int,
