@@ -39,6 +39,8 @@ class ApiRouter(private val storageHandler: StorageHandler,
         "/content".nest {
             POST("").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::createContent)
             GET("/{id}").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::getContent)
+            POST("/{contentId}").and(accept(MediaType.MULTIPART_FORM_DATA)).and(contentType(MediaType.MULTIPART_FORM_DATA))
+                    .and(queryParam("elementTypeId") { true }).invoke(contentHandler::createContentElement)
         }
     }
 }

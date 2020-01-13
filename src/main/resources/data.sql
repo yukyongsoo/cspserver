@@ -1,7 +1,7 @@
 insert into CSP_ARCHIVE(id, name)
 values (1, 'testArchive');
-insert into CSP_STORAGE(id, name)
-values (1, 'testStorage');
+insert into CSP_STORAGE(id, name, path)
+values (1, 'testStorage','/Users/yug-yongsu/Desktop/temp');
 insert into CSP_ARCHIVE_STORAGE(archive_Id, storage_Id)
 values (1, 1);
 

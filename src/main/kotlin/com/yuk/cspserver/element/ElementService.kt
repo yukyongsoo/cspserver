@@ -18,7 +18,7 @@ class ElementService(private val elementTypeService: ElementTypeService,
         val elementId = elementCommandDAO.createElement(element.elementFile.getName(), element.contentId ,elementType.id) ?.run { this as Int }
                 ?: throw IllegalStateException("can't save element, contentId is ${element.contentId}")
         initializeRules.forEach {
-            elementFileService.saveFile(it.archiveId, elementId, element.elementFile)
+            elementFileService.saveFile(it.archiveId,elementId, element)
         }
         return "/storage/${element.contentId}/$elementId"
     }

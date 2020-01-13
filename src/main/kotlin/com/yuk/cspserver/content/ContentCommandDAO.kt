@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class ContentCommandDAO(private val databaseClient: DatabaseClient) {
-    suspend fun createContent(contentId: String, contentTypeName: String) {
-        val entity = ContentEntity(contentId, contentTypeName)
+    suspend fun createContent(contentId: String, contentTypeId: Int) {
+        val entity = ContentEntity(contentId, contentTypeId)
         databaseClient.insert().into(ContentEntity::class.java)
                 .using(entity)
                 .fetch().awaitFirst()
