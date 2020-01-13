@@ -1,3 +1,8 @@
 package com.yuk.cspserver.storage
 
-data class StorageDTO(val archiveId: Int, val storageId: String)
+import com.yuk.cspserver.storage.strategy.DiskStrategy
+
+data class StorageDTO(val storageId: String,
+                      val name : String,
+                      val usable : Boolean,
+                      val strategy : DiskStrategy)

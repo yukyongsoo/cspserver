@@ -1,10 +1,9 @@
 drop table if exists CSP_ELEMENT_FILE;
 drop table if exists CSP_ELEMENT;
 
+drop table if exists CSP_RULE_INIT;
 drop table if exists CSP_ELEMENT_TYPE_RULE;
 drop table if exists CSP_ELEMENT_TYPE;
-
-drop table if exists CSP_RULE_INIT;
 
 drop table if exists CSP_CONTENT;
 drop table if exists CSP_CONTENT_TYPE;
@@ -90,11 +89,12 @@ create table CSP_ELEMENT_FILE
 (
     ELEMENT_ID   int          not null,
     foreign key (ELEMENT_ID) references CSP_ELEMENT (ID),
-    ARCHIVE_PATH varchar(30)  not null,
+    ARCHIVE_ID int not null,
+    foreign key (ARCHIVE_ID) references CSP_ARCHIVE (ID),
     STORAGE_PATH    varchar(45)  not null,
     FILE_PATH    varchar(255) not null
 );
 
 CREATE INDEX INDEX_FILE_ELEMENT_ID ON CSP_ELEMENT_FILE (ELEMENT_ID);
-CREATE UNIQUE INDEX INDEX_ELEMENT_FILE_CONSTRAINT ON CSP_ELEMENT_FILE(ELEMENT_ID,ARCHIVE_PATH);
+CREATE UNIQUE INDEX INDEX_ELEMENT_FILE_CONSTRAINT ON CSP_ELEMENT_FILE(ELEMENT_ID,ARCHIVE_ID);
 

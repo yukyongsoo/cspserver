@@ -10,8 +10,9 @@ values (1, 'testType');
 insert into CSP_ELEMENT_TYPE(id, name)
 values (1, 'testType');
 
-insert into CSP_RULE_INIT(RULE_ID, ARCHIVE_ID)
-values (1, 1);
 
 insert into CSP_ELEMENT_TYPE_RULE (ELEMENT_TYPE_ID, RULE_ID,RULE_TYPE)
 values (1, 1, 1);
+
+insert into CSP_RULE_INIT(RULE_ID, ARCHIVE_ID)
+values (1, 1);

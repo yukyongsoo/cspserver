@@ -1,4 +1,4 @@
-package com.yuk.cspserver.archive.common
+package com.yuk.cspserver.archive
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table

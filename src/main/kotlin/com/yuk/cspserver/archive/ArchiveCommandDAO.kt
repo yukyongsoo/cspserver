@@ -1,4 +1,4 @@
-package com.yuk.cspserver.archive.common
+package com.yuk.cspserver.archive
 
 import org.springframework.data.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Component
