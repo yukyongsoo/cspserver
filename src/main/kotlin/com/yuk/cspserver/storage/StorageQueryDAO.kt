@@ -11,6 +11,6 @@ class StorageQueryDAO(private val databaseClient: DatabaseClient) {
     suspend fun findStorages(storageIdList: List<Int>) =
             databaseClient.select().from(StorageEntity::class.java)
                     .matching(where("id").`in`(storageIdList))
-                    .`as`(StorageDTO::class.java)
+                    .`as`(StorageEntity::class.java)
                     .all().asFlow().toList()
 }

@@ -18,7 +18,7 @@ class ElementRuleService(private val elementRuleQueryDAO: ElementRuleQueryDAO,
     }
 
     suspend fun createInitializeRule(elementTypeId: Int,archiveId : Int) {
-        val ruleId = elementRuleCommandDAO.createRule(elementTypeId,ElementRuleType.INITIALIZE.ordinal)
+        val ruleId = elementRuleCommandDAO.createRule(elementTypeId,ElementRuleType.INITIALIZE.typeId)
         archiveService.getArchive(archiveId)
         initializeRuleCommandDAO.createInitializeRule(ruleId,archiveId)
     }

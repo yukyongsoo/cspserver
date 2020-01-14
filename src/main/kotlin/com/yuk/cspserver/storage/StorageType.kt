@@ -1,6 +1,6 @@
 package com.yuk.cspserver.storage
 
-enum class StorageType {
-    DISK,
-    S3
+enum class StorageType(val type : Int) {
+    DISK(1),
+    S3(2)
 }

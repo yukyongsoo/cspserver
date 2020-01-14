@@ -22,6 +22,7 @@ create table CSP_STORAGE
 (
     ID   int auto_increment primary key,
     NAME varchar(30) unique not null,
+    TYPE int not null,
     PATH varchar(30) not null,
     USABLE boolean not null default true
 );
