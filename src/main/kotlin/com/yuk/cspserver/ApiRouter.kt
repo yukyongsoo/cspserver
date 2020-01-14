@@ -23,14 +23,14 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setStorageRouter() = coRouter {
         "/storage".nest {
-            GET("",storageHandler::getAllStorage)
+            GET("", storageHandler::getAllStorage)
         }
     }
 
     @Bean
     fun setArchiveRouter() = coRouter {
         "/archive".nest {
-            GET("",archiveHandler::getAllArchive)
+            GET("", archiveHandler::getAllArchive)
         }
     }
 
@@ -41,6 +41,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
             GET("/{id}").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::getContent)
             POST("/{contentId}").and(accept(MediaType.MULTIPART_FORM_DATA)).and(contentType(MediaType.MULTIPART_FORM_DATA))
                     .and(queryParam("elementTypeId") { true }).invoke(contentHandler::createContentElement)
+            GET("/{contentId}/{elementId}").and(contentType(MediaType.MULTIPART_FORM_DATA)).invoke(contentHandler::getContentElement)
         }
     }
 }

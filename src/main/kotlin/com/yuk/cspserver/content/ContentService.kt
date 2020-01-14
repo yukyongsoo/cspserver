@@ -30,4 +30,8 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
         val elementId = elementService.createElement(element)
         return "/content/${element.contentId}/$elementId"
     }
+
+    suspend fun getContentElement(contentId: String, elementId: String) {
+        //TODO :: we need make function
+    }
 }

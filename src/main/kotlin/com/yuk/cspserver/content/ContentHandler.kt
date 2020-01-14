@@ -28,4 +28,11 @@ class ContentHandler(private val contentService: ContentService) {
         val element = ElementRequestDTO(contentId,elementTypeId, ElementFilePart(file))
         return ServerResponse.created(URI.create(contentService.createContentElement(element))).buildAndAwait()
     }
+
+    suspend fun getContentElement(serverRequest: ServerRequest) : ServerResponse {
+        val contentId = serverRequest.pathVariable("contentId")
+        val elementId = serverRequest.pathVariable("elementId")
+        return ServerResponse.ok().bodyValueAndAwait(contentService.getContentElement(contentId,elementId))
+
+    }
 }
