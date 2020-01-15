@@ -18,5 +18,17 @@ class ElementFileService(private val elementFileQueryDAO: ElementFileQueryDAO,
         elementFileCommandDAO.saveFile(archiveId, elementId, path)
     }
 
+    suspend fun getFile(elementId: String) {
+        val elementFile = elementFileQueryDAO.getElementFile(elementId)
+        if (elementFile.isEmpty())
+            throw IllegalStateException("can't find any file for element. elementId is $elementId")
+        elementFile.map {
+            //TODO :: storagePath to storageId
+        }
+
+
+
+    }
+
 
 }

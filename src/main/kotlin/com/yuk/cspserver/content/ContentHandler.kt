@@ -33,6 +33,11 @@ class ContentHandler(private val contentService: ContentService) {
         val contentId = serverRequest.pathVariable("contentId")
         val elementId = serverRequest.pathVariable("elementId")
         return ServerResponse.ok().bodyValueAndAwait(contentService.getContentElement(contentId,elementId))
+    }
 
+    suspend fun getContentFile(serverRequest: ServerRequest) : ServerResponse {
+        val contentId = serverRequest.pathVariable("contentId")
+        val elementId = serverRequest.pathVariable("elementId")
+        return ServerResponse.ok().bodyValueAndAwait(contentService.getContentFile(contentId, elementId))
     }
 }

@@ -15,11 +15,22 @@ class ElementService(private val elementTypeService: ElementTypeService,
     suspend fun createElement(element: ElementRequestDTO): String {
         val elementType = elementTypeService.getType(element.elementTypeId)
         val initializeRules = elementRuleService.getInitializeRule(elementType.id)
-        val elementId = elementCommandDAO.createElement(element.elementFile.getName(), element.contentId ,elementType.id) ?.run { this as Int }
+        val elementId = elementCommandDAO.createElement(element.elementFile.getName(), element.contentId, elementType.id)?.run { this as Int }
                 ?: throw IllegalStateException("can't save element, contentId is ${element.contentId}")
         initializeRules.forEach {
-            elementFileService.saveFile(it.archiveId,elementId, element)
+            elementFileService.saveFile(it.archiveId, elementId, element)
         }
         return "/storage/${element.contentId}/$elementId"
     }
+
+    suspend fun getElement(elementId: String) =
+            elementQueryDAO.getElement(elementId)?.run {
+                ElementResponseDTO(this.id, this.contentId, this.type, this.name)
+            } ?: throw IllegalStateException("can't get element, elementID is $elementId")
+
+    suspend fun getElementFile(elementId: String) {
+        getElementFile(elementId)
+        return elementFileService.getFile(elementId)
+    }
+
 }
