@@ -46,6 +46,7 @@ create table CSP_CONTENT_TYPE
 create table CSP_CONTENT
 (
     ID      varchar(45) primary key,
+    NAME varchar(255) not null,
     TYPE_ID varchar(30) not null,
     foreign key (TYPE_ID) references CSP_CONTENT_TYPE (ID)
 );

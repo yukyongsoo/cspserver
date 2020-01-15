@@ -14,14 +14,17 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
     suspend fun createContent(contentRequest: ContentRequestDTO): String {
         val elementType = contentTypeService.getElementType(contentRequest.contentTypeId)
                 ?: throw IllegalArgumentException("content Type Not Found. ${contentRequest.contentTypeId}")
+        if(contentRequest.name.isBlank())
+            throw  IllegalArgumentException("content must have name. you request is ${contentRequest.name}")
+
         val contentId = UUID.randomUUID().toString()
-        contentCommandDAO.createContent(contentId, elementType.id)
+        contentCommandDAO.createContent(contentId,contentRequest)
         return "/content/$contentId"
     }
 
     suspend fun getContent(contentId: String) =
             contentQueryDAO.getContent(contentId)?.let {
-                ContentResponseDTO(it.id, it.typeId)
+                ContentResponseDTO(it.id, it.name, it.typeId)
             } ?: throw IllegalStateException("content $contentId not found")
 
     suspend fun createContentElement(element: ElementRequestDTO): String {
