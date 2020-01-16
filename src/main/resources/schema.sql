@@ -95,6 +95,8 @@ create table CSP_ELEMENT_FILE
     foreign key (ELEMENT_ID) references CSP_ELEMENT (ID),
     ARCHIVE_ID int not null,
     foreign key (ARCHIVE_ID) references CSP_ARCHIVE (ID),
+    STORAGE_ID int not null,
+    foreign key (STORAGE_ID) references CSP_STORAGE (ID),
     STORAGE_PATH    varchar(45)  not null,
     FILE_PATH    varchar(255) not null
 );

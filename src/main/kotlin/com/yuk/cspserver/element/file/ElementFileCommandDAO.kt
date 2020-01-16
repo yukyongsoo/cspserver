@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class ElementFileCommandDAO(private val databaseClient: DatabaseClient) {
-    suspend fun saveFile(archiveId: Int, elementId: Int, path: StoragePath) =
+    suspend fun saveFile(archiveId: Int, elementId: Int,storageId : Int, path: StoragePath) =
             databaseClient.insert().into(ElementFileEntity::class.java)
-                    .using(ElementFileEntity(elementId,archiveId,path.storagePath,path.filePath))
+                    .using(ElementFileEntity(elementId,archiveId,storageId, path.storagePath,path.filePath))
                     .await()
 }

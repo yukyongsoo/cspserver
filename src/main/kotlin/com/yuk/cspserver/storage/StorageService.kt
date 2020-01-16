@@ -10,12 +10,19 @@ class StorageService(private val storageCommandDAO: StorageCommandDAO,
     suspend fun findStorageList(storageIdList: List<Int>) =
             storageQueryDAO.findStorages(storageIdList)
                     .map {
-                        when (it.type) {
-                            1 -> StorageDTO(it.id, it.name, it.path, it.usable, DiskStrategy())
-                            2 -> StorageDTO(it.id, it.name, it.path, it.usable, DiskStrategy())
-                            else ->
-                                throw IllegalStateException("can't find storage Strategy for type ${it.type} for storage. storage Id is ${it.id}")
-                        }
+                        getStorageDto(it)
                     }
 
+    suspend fun getStorage(storageId: Int) =
+            storageQueryDAO.getStorage(storageId)?.run {
+                getStorageDto(this)
+            } ?: throw IllegalStateException("can't find any storage for $storageId")
+
+    private fun getStorageDto(storageEntity: StorageEntity) =
+            when (storageEntity.type) {
+                1 -> StorageDTO(storageEntity.id, storageEntity.name, storageEntity.path, storageEntity.usable, DiskStrategy())
+                2 -> StorageDTO(storageEntity.id, storageEntity.name, storageEntity.path, storageEntity.usable, DiskStrategy())
+                else ->
+                    throw IllegalStateException("can't find storage Strategy for type ${storageEntity.type} for storage. storage Id is ${storageEntity.id}")
+            }
 }
