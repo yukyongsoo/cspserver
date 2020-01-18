@@ -4,6 +4,7 @@ import com.yuk.cspserver.content.type.ContentTypeService
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.ElementResponseDTO
 import com.yuk.cspserver.element.ElementService
+import com.yuk.cspserver.element.file.filepart.ElementFile
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -41,7 +42,7 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
         return elementService.getElement(elementId)
     }
 
-    suspend fun getContentFile(contentId: String, elementId: String) {
+    suspend fun getContentFile(contentId: String, elementId: String): ElementFile {
         contentQueryDAO.getContent(contentId)
                 ?: throw IllegalArgumentException("can't find any content. id is $contentId")
         return elementService.getElementFile(elementId)

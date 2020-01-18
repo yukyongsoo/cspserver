@@ -2,6 +2,7 @@ package com.yuk.cspserver.element.file
 
 import com.yuk.cspserver.archive.ArchiveService
 import com.yuk.cspserver.element.ElementRequestDTO
+import com.yuk.cspserver.element.file.filepart.ElementFile
 import com.yuk.cspserver.storage.StorageService
 import org.springframework.stereotype.Service
 
@@ -16,15 +17,14 @@ class ElementFileService(private val elementFileQueryDAO: ElementFileQueryDAO,
         elementFileCommandDAO.saveFile(archiveId, elementId, storage.id, path)
     }
 
-    suspend fun getFile(elementId: String) {
+    suspend fun getFile(elementId: Int, contentId: String): ElementFile {
         val elementFile = elementFileQueryDAO.getElementFile(elementId)
         if (elementFile.isEmpty())
             throw IllegalStateException("can't find any file for element. elementId is $elementId")
         elementFile.forEachIndexed { index, elementFileEntity ->
             val storage = storageService.getStorage(elementFileEntity.storageId)
-             storage.strategy.getFile()
-
-
+            return storage.strategy.getFile(elementId, storage.path, contentId)
         }
+        throw IllegalStateException("can't get any file from storage. check you storage Data. id is $elementId")
     }
 }

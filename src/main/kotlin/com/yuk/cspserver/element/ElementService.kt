@@ -1,6 +1,7 @@
 package com.yuk.cspserver.element
 
 import com.yuk.cspserver.element.file.ElementFileService
+import com.yuk.cspserver.element.file.filepart.ElementFile
 import com.yuk.cspserver.element.rule.ElementRuleService
 import com.yuk.cspserver.element.type.ElementTypeService
 import org.springframework.stereotype.Service
@@ -28,9 +29,9 @@ class ElementService(private val elementTypeService: ElementTypeService,
                 ElementResponseDTO(this.id, this.contentId, this.type, this.name)
             } ?: throw IllegalStateException("can't get element, elementID is $elementId")
 
-    suspend fun getElementFile(elementId: String) {
-        getElementFile(elementId)
-        return elementFileService.getFile(elementId)
+    suspend fun getElementFile(elementId: String): ElementFile {
+        val element = getElement(elementId)
+        return elementFileService.getFile(element.id,element.contentId)
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ElementFileQueryDAO(private val databaseClient: DatabaseClient) {
-    suspend fun getElementFile(elementId: String) =
+    suspend fun getElementFile(elementId: Int) =
             databaseClient.select().from(ElementFileEntity::class.java)
                     .matching(where("elementId").`is`(elementId))
                     .`as`(ElementFileEntity::class.java)

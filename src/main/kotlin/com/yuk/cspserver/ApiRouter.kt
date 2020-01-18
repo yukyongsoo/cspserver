@@ -16,8 +16,6 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }
-
-
     }
 
     @Bean
