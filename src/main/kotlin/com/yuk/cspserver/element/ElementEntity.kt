@@ -9,6 +9,7 @@ data class ElementEntity(@Column("CONTENT_ID") val contentId: String,
                          val type : Int,
                          val name : String)
 
+@Table("CSP_ELEMENT")
 data class ElementReadEntity(@Id val id : Int,
                              @Column("CONTENT_ID") val contentId: String,
                              val type : Int,

@@ -1,0 +1,1 @@
+insert into CSP_CONTENT(ID,NAME,TYPE_ID) values('1','1',1);

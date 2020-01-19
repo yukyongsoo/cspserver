@@ -45,7 +45,9 @@ dependencies {
     }
     testImplementation("org.springframework.boot.experimental:spring-boot-test-autoconfigure-r2dbc")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.springframework.batch:spring-batch-test")
+    testImplementation("org.springframework.batch:spring-batch-test") {
+        exclude(group = "junit", module = "junit")
+    }
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.security:spring-security-test")
 }

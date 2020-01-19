@@ -4,7 +4,7 @@ import com.yuk.cspserver.content.type.ContentTypeService
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.ElementResponseDTO
 import com.yuk.cspserver.element.ElementService
-import com.yuk.cspserver.element.file.filepart.ElementFile
+import com.yuk.cspserver.element.file.filepart.ElementFileReader
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -18,10 +18,9 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
                 ?: throw IllegalArgumentException("content Type Not Found. ${contentRequest.contentTypeId}")
         if (contentRequest.name.isBlank())
             throw  IllegalArgumentException("content must have name. you request is ${contentRequest.name}")
-
         val contentId = UUID.randomUUID().toString()
         contentCommandDAO.createContent(contentId, contentRequest)
-        return "/content/$contentId"
+        return contentId
     }
 
     suspend fun getContent(contentId: String) =
@@ -32,8 +31,7 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
     suspend fun createContentElement(element: ElementRequestDTO): String {
         contentQueryDAO.getContent(element.contentId)
                 ?: throw IllegalStateException("content ${element.contentId} not found")
-        val elementId = elementService.createElement(element)
-        return "/content/${element.contentId}/$elementId"
+        return elementService.createElement(element)
     }
 
     suspend fun getContentElement(contentId: String, elementId: String): ElementResponseDTO {
@@ -42,7 +40,7 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
         return elementService.getElement(elementId)
     }
 
-    suspend fun getContentFile(contentId: String, elementId: String): ElementFile {
+    suspend fun getContentFile(contentId: String, elementId: String): ElementFileReader {
         contentQueryDAO.getContent(contentId)
                 ?: throw IllegalArgumentException("can't find any content. id is $contentId")
         return elementService.getElementFile(elementId)

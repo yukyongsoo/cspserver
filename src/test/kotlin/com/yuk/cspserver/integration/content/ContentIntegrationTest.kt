@@ -1,0 +1,98 @@
+package com.yuk.cspserver.integration.content
+
+import com.yuk.cspserver.content.ContentRequestDTO
+import com.yuk.cspserver.content.ContentResponseDTO
+import com.yuk.cspserver.element.ElementResponseDTO
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.io.ClassPathResource
+import org.springframework.http.MediaType
+import org.springframework.http.RequestEntity
+import org.springframework.http.client.MultipartBodyBuilder
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest
+import org.springframework.test.context.TestConstructor
+import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.web.reactive.server.FluxExchangeResult
+import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.returnResult
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+class ContentIntegrationTest(private val webTestClient: WebTestClient) {
+    private val contentId = "1"
+    private val elementTypeId = 1
+
+    @Test
+    fun `컨텐츠 만들기`() {
+        val testContentRequestDTO = ContentRequestDTO(elementTypeId, "테스트")
+        webTestClient.post()
+                .uri("/content")
+                .bodyValue(testContentRequestDTO)
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .expectHeader().exists("location")
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `컨텐츠 가져오기`(){
+        webTestClient.get()
+                .uri("/content/$contentId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(ContentResponseDTO::class.java)
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `컨텐츠 엘리먼트 만들기`() {
+        createContentElementTest()
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `컨텐츠 정보 가져오기`(){
+        val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
+
+        webTestClient.head()
+                .uri("/content/$contentId/$elementId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(ElementResponseDTO::class.java)
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `컨텐츠 파일 가져오기`(){
+        val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
+
+        val body = webTestClient.get()
+                .uri("/content/$contentId/$elementId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .expectBody(String::class.java)
+                .returnResult().responseBody
+        //TODO:: check body not found
+        print(body)
+    }
+
+    private fun createContentElementTest(): String? {
+        val body = MultipartBodyBuilder()
+        body.part("file",ClassPathResource("/testFile.txt"))
+
+        return webTestClient.post()
+                .uri {
+                    it.path("/content/$contentId")
+                    it.queryParam("elementTypeId",elementTypeId)
+                    it.build()
+                }
+                .bodyValue(body.build())
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .returnResult(String::class.java)
+                .responseBody.blockFirst()
+    }
+
+}

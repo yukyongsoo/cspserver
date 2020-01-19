@@ -36,13 +36,12 @@ class ApiRouter(private val storageHandler: StorageHandler,
     fun setContentRouter() = coRouter {
         "/content".nest {
             POST("").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::createContent)
-            GET("/{id}").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::getContent)
+            GET("/{id}").invoke(contentHandler::getContent)
+
             POST("/{contentId}").and(accept(MediaType.MULTIPART_FORM_DATA)).and(contentType(MediaType.MULTIPART_FORM_DATA))
                     .and(queryParam("elementTypeId") { true }).invoke(contentHandler::createContentElement)
-            HEAD("/{contentId}/{elementId}").and(accept(MediaType.APPLICATION_JSON))
-                    .and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::getContentElement)
-            GET("/{contentId}/{elementId}").and(accept(MediaType.APPLICATION_JSON))
-                    .and(contentType(MediaType.MULTIPART_FORM_DATA)).invoke(contentHandler::getContentFile)
+            HEAD("/{contentId}/{elementId}").invoke(contentHandler::getContentElement)
+            GET("/{contentId}/{elementId}").invoke(contentHandler::getContentFile)
         }
     }
 }
