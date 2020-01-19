@@ -7,14 +7,10 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
-import org.springframework.http.RequestEntity
 import org.springframework.http.client.MultipartBodyBuilder
-import org.springframework.mock.http.server.reactive.MockServerHttpRequest
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.reactive.server.FluxExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.returnResult
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -74,8 +70,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
                 .expectStatus().is2xxSuccessful
                 .expectBody(String::class.java)
                 .returnResult().responseBody
-        //TODO:: check body not found
-        print(body)
     }
 
     private fun createContentElementTest(): String? {

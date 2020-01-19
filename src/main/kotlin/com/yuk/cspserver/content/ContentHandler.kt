@@ -2,8 +2,7 @@ package com.yuk.cspserver.content
 
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileWriterPart
-import org.springframework.http.MediaType
-import org.springframework.http.client.MultipartBodyBuilder
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
@@ -47,6 +46,6 @@ class ContentHandler(private val contentService: ContentService) {
         val contentId = serverRequest.pathVariable("contentId")
         val elementId = serverRequest.pathVariable("elementId")
         val resource = contentService.getContentFile(contentId, elementId).getResource()
-        return ServerResponse.ok().bodyValueAndAwait(BodyInserters.fromResource(resource))
+        return ServerResponse.ok().body(BodyInserters.fromResource(resource)).awaitFirst()
     }
 }
