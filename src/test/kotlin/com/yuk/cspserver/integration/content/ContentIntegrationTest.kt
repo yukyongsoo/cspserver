@@ -31,7 +31,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 가져오기`(){
+    fun `컨텐츠 가져오기`() {
         webTestClient.get()
                 .uri("/content/$contentId")
                 .exchange()
@@ -48,7 +48,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 정보 가져오기`(){
+    fun `컨텐츠 정보 가져오기`() {
         val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
 
         webTestClient.head()
@@ -61,10 +61,10 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 파일 가져오기`(){
+    fun `컨텐츠 파일 가져오기`() {
         val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
 
-        val body = webTestClient.get()
+        webTestClient.get()
                 .uri("/content/$contentId/$elementId")
                 .exchange()
                 .expectStatus().is2xxSuccessful
@@ -74,12 +74,12 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     private fun createContentElementTest(): String? {
         val body = MultipartBodyBuilder()
-        body.part("file",ClassPathResource("/testFile.txt"))
+        body.part("file", ClassPathResource("/testFile.txt"))
 
         return webTestClient.post()
                 .uri {
                     it.path("/content/$contentId")
-                    it.queryParam("elementTypeId",elementTypeId)
+                    it.queryParam("elementTypeId", elementTypeId)
                     it.build()
                 }
                 .bodyValue(body.build())

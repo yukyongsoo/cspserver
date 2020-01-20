@@ -6,7 +6,9 @@ import com.yuk.cspserver.storage.StorageHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.buildAndAwait
+import org.springframework.web.reactive.function.server.coRouter
 
 @Configuration
 class ApiRouter(private val storageHandler: StorageHandler,
@@ -35,13 +37,25 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setContentRouter() = coRouter {
         "/content".nest {
-            POST("").and(accept(MediaType.APPLICATION_JSON)).and(contentType(MediaType.APPLICATION_JSON)).invoke(contentHandler::createContent)
-            GET("/{id}").invoke(contentHandler::getContent)
+            POST("")
+            accept(MediaType.APPLICATION_JSON)
+            contentType(MediaType.APPLICATION_JSON, contentHandler::createContent)
 
-            POST("/{contentId}").and(accept(MediaType.MULTIPART_FORM_DATA)).and(contentType(MediaType.MULTIPART_FORM_DATA))
-                    .and(queryParam("elementTypeId") { true }).invoke(contentHandler::createContentElement)
-            HEAD("/{contentId}/{elementId}").invoke(contentHandler::getContentElement)
-            GET("/{contentId}/{elementId}").invoke(contentHandler::getContentFile)
+            "/{contentId}".nest {
+                GET("", contentHandler::getContent)
+                DELETE("",contentHandler::deleteContent)
+
+                POST("")
+                accept(MediaType.MULTIPART_FORM_DATA)
+                contentType(MediaType.APPLICATION_JSON)
+                queryParam("elementTypeId", { true }, contentHandler::createContentElement)
+            }
+
+            "/{contentId}/{elementId}".nest {
+                HEAD("",contentHandler::getContentElement)
+                GET("", contentHandler::getContentFile)
+                DELETE("", contentHandler::deleteContentElement)
+            }
         }
     }
 }

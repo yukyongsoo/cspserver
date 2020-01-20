@@ -23,10 +23,25 @@ class DiskStrategy : StorageStrategy() {
         return ElementFileReaderPart(filePart)
     }
 
+    override suspend fun deleteFile(elementId: Int, storagePath: String, contentId: String) {
+        val filePath = createFilePath(contentId, elementId)
+        val file = File("$storagePath/$filePath")
+        file.delete()
+        cleanUpContentFolder(storagePath, contentId)
+    }
+
     override fun createFilePath(contentId: String, elementId: Int) =
             "$contentId/$elementId"
 
     override fun makeFolder(storagePath: String, contentId: String) {
         Files.createDirectories(Paths.get("$storagePath/$contentId"))
+    }
+
+    override fun cleanUpContentFolder(storagePath: String, contentId: String) {
+        val contentDirectory = File("$storagePath/$contentId")
+        val fileList = File("$storagePath/$contentId").listFiles()
+        fileList?.run{
+            if(this.isEmpty()) contentDirectory.delete()
+        } ?: contentDirectory.delete()
     }
 }

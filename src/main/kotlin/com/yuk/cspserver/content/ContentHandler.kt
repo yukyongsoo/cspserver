@@ -19,8 +19,14 @@ class ContentHandler(private val contentService: ContentService) {
     }
 
     suspend fun getContent(serverRequest: ServerRequest): ServerResponse {
-        val contentId = serverRequest.pathVariable("id")
+        val contentId = serverRequest.pathVariable("contentId")
         return ServerResponse.ok().bodyValueAndAwait(contentService.getContent(contentId))
+    }
+
+    suspend fun deleteContent(serverRequest: ServerRequest): ServerResponse {
+        val contentId = serverRequest.pathVariable("contentId")
+        contentService.deleteContent(contentId)
+        return ServerResponse.ok().buildAndAwait()
     }
 
     suspend fun createContentElement(serverRequest: ServerRequest): ServerResponse {
@@ -38,14 +44,21 @@ class ContentHandler(private val contentService: ContentService) {
 
     suspend fun getContentElement(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementId = serverRequest.pathVariable("elementId")
+        val elementId = serverRequest.pathVariable("elementId").toInt()
         return ServerResponse.ok().bodyValueAndAwait(contentService.getContentElement(contentId, elementId))
     }
 
     suspend fun getContentFile(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementId = serverRequest.pathVariable("elementId")
+        val elementId = serverRequest.pathVariable("elementId").toInt()
         val resource = contentService.getContentFile(contentId, elementId).getResource()
         return ServerResponse.ok().body(BodyInserters.fromResource(resource)).awaitFirst()
+    }
+
+    suspend fun deleteContentElement(serverRequest: ServerRequest): ServerResponse {
+        val contentId = serverRequest.pathVariable("contentId")
+        val elementId = serverRequest.pathVariable("elementId").toInt()
+        contentService.deleteContentElement(contentId,elementId)
+        return ServerResponse.ok().buildAndAwait()
     }
 }

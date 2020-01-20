@@ -2,7 +2,6 @@ package com.yuk.cspserver.element
 
 import com.yuk.cspserver.element.file.ElementFileService
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
-import com.yuk.cspserver.element.file.filepart.ElementFileWriter
 import com.yuk.cspserver.element.rule.ElementRuleService
 import com.yuk.cspserver.element.type.ElementTypeService
 import org.springframework.stereotype.Service
@@ -25,14 +24,23 @@ class ElementService(private val elementTypeService: ElementTypeService,
         return elementId.toString()
     }
 
-    suspend fun getElement(elementId: String) =
+    suspend fun getElement(elementId: Int) =
             elementQueryDAO.getElement(elementId)?.run {
                 ElementResponseDTO(this.id, this.contentId, this.type, this.name)
             } ?: throw IllegalStateException("can't get element, elementID is $elementId")
 
-    suspend fun getElementFile(elementId: String): ElementFileReader {
+    suspend fun getElementFile(elementId: Int): ElementFileReader {
         val element = getElement(elementId)
-        return elementFileService.getFile(element.id,element.contentId)
+        return elementFileService.getFile(element.id, element.contentId)
     }
 
+    suspend fun findByContentId(contentId: String) =
+            elementQueryDAO.getElementByContentId(contentId).map {
+                ElementResponseDTO(it.id, it.contentId, it.type, it.name)
+            }
+
+    suspend fun deleteElement(contentId: String, elementId: Int) {
+        elementFileService.deleteFile(elementId,contentId)
+        elementCommandDAO.deleteElement(contentId,elementId)
+    }
 }
