@@ -31,7 +31,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 가져오기`() {
+    fun `컨텐츠 정보 가져오기`() {
         webTestClient.get()
                 .uri("/content/$contentId")
                 .exchange()
@@ -42,13 +42,13 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 엘리먼트 만들기`() {
+    fun `엘리먼트 만들기`() {
         createContentElementTest()
     }
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 정보 가져오기`() {
+    fun `엘리먼트 정보 가져오기`() {
         val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
 
         webTestClient.head()
@@ -61,8 +61,8 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     @Sql("/content.sql")
-    fun `컨텐츠 파일 가져오기`() {
-        val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
+    fun `엘리먼트 파일 가져오기`() {
+        val elementId = createContentElementTest()
 
         webTestClient.get()
                 .uri("/content/$contentId/$elementId")
@@ -72,7 +72,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
                 .returnResult().responseBody
     }
 
-    private fun createContentElementTest(): String? {
+    private fun createContentElementTest(): String {
         val body = MultipartBodyBuilder()
         body.part("file", ClassPathResource("/testFile.txt"))
 
@@ -85,8 +85,39 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
                 .bodyValue(body.build())
                 .exchange()
                 .expectStatus().is2xxSuccessful
-                .returnResult(String::class.java)
-                .responseBody.blockFirst()
+                .returnResult<String>(String::class.java)
+                .responseBody.blockFirst() ?: throw IllegalStateException("making test element fail")
     }
 
+    @Test
+    @Sql("/content.sql")
+    fun `컨텐츠 삭제`(){
+        webTestClient.delete()
+                .uri("/content/$contentId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `엘리먼트 삭제 및 컨텐츠 폴더 정리`(){
+        val elementId = createContentElementTest()
+
+        webTestClient.delete()
+                .uri("/content/$contentId/$elementId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+    }
+
+    @Test
+    @Sql("/content.sql")
+    fun `엘리먼트 삭제`(){
+        val elementId = createContentElementTest()
+        createContentElementTest()
+
+        webTestClient.delete()
+                .uri("/content/$contentId/$elementId")
+                .exchange()
+                .expectStatus().is2xxSuccessful
+    }
 }

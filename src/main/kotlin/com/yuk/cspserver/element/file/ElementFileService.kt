@@ -34,5 +34,6 @@ class ElementFileService(private val elementFileQueryDAO: ElementFileQueryDAO,
             val storage = storageService.getStorage(elementFileEntity.storageId)
             storage.strategy.deleteFile(elementId, storage.path, contentId)
         }
+        elementFileCommandDAO.deleteElement(elementId)
     }
 }
