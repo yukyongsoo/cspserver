@@ -1,6 +1,7 @@
 package com.yuk.cspserver
 
 import com.yuk.cspserver.archive.ArchiveHandler
+import com.yuk.cspserver.authentication.Authentication
 import com.yuk.cspserver.content.ContentHandler
 import com.yuk.cspserver.storage.StorageHandler
 import org.springframework.context.annotation.Bean
@@ -13,7 +14,8 @@ import org.springframework.web.reactive.function.server.coRouter
 @Configuration
 class ApiRouter(private val storageHandler: StorageHandler,
                 private val archiveHandler: ArchiveHandler,
-                private val contentHandler: ContentHandler) {
+                private val contentHandler: ContentHandler,
+                private val authentication : Authentication) {
 
     @Bean
     fun setRootRouter() = coRouter {
@@ -23,6 +25,11 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setStorageRouter() = coRouter {
         "/storage".nest {
+            before {
+                authentication.check()
+                it
+            }
+
             GET("", storageHandler::getAllStorage)
         }
     }
@@ -30,6 +37,11 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setArchiveRouter() = coRouter {
         "/archive".nest {
+            before {
+                authentication.check()
+                it
+            }
+
             GET("", archiveHandler::getAllArchive)
         }
     }
@@ -37,6 +49,11 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setContentRouter() = coRouter {
         "/content".nest {
+            before {
+                authentication.check()
+                it
+            }
+
             POST("")
             accept(MediaType.APPLICATION_JSON)
             contentType(MediaType.APPLICATION_JSON, contentHandler::createContent)
@@ -58,4 +75,6 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
         }
     }
+
+
 }
