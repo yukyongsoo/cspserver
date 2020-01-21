@@ -7,6 +7,7 @@ import org.springframework.core.io.FileSystemResource
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 
 class DiskStrategy : StorageStrategy() {
     override suspend fun saveFile(elementId: Int, storagePath: String, contentId: String, elementFileWriter: ElementFileWriter): StoragePath {
@@ -28,6 +29,7 @@ class DiskStrategy : StorageStrategy() {
         val file = File("$storagePath/$filePath")
         file.delete()
         cleanUpContentFolder(storagePath, contentId)
+        listOf<String>().sorted()
     }
 
     override fun createFilePath(contentId: String, elementId: Int) =

@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql("/content.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     private val contentId = "1"
     private val elementTypeId = 1
@@ -30,7 +31,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `컨텐츠 정보 가져오기`() {
         webTestClient.get()
                 .uri("/content/$contentId")
@@ -41,15 +41,13 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `엘리먼트 만들기`() {
         createContentElementTest()
     }
 
     @Test
-    @Sql("/content.sql")
     fun `엘리먼트 정보 가져오기`() {
-        val elementId = createContentElementTest() ?: throw IllegalStateException("making test element fail")
+        val elementId = createContentElementTest()
 
         webTestClient.head()
                 .uri("/content/$contentId/$elementId")
@@ -60,7 +58,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `엘리먼트 파일 가져오기`() {
         val elementId = createContentElementTest()
 
@@ -90,7 +87,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `컨텐츠 삭제`(){
         webTestClient.delete()
                 .uri("/content/$contentId")
@@ -99,7 +95,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `엘리먼트 삭제 및 컨텐츠 폴더 정리`(){
         val elementId = createContentElementTest()
 
@@ -110,7 +105,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    @Sql("/content.sql")
     fun `엘리먼트 삭제`(){
         val elementId = createContentElementTest()
         createContentElementTest()
