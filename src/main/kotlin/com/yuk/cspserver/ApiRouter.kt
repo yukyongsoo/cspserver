@@ -1,7 +1,7 @@
 package com.yuk.cspserver
 
 import com.yuk.cspserver.archive.ArchiveHandler
-import com.yuk.cspserver.authentication.Authentication
+import com.yuk.cspserver.authentication.AuthenticationHandler
 import com.yuk.cspserver.content.ContentHandler
 import com.yuk.cspserver.storage.StorageHandler
 import org.springframework.context.annotation.Bean
@@ -15,18 +15,19 @@ import org.springframework.web.reactive.function.server.coRouter
 class ApiRouter(private val storageHandler: StorageHandler,
                 private val archiveHandler: ArchiveHandler,
                 private val contentHandler: ContentHandler,
-                private val authentication : Authentication) {
+                private val authenticationHandler: AuthenticationHandler) {
 
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }
+        POST("",authenticationHandler::login)
     }
 
     @Bean
     fun setStorageRouter() = coRouter {
         "/storage".nest {
             before {
-                authentication.check()
+                authenticationHandler.check(it)
                 it
             }
 
@@ -38,7 +39,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
     fun setArchiveRouter() = coRouter {
         "/archive".nest {
             before {
-                authentication.check()
+                authenticationHandler.check(it)
                 it
             }
 
@@ -50,7 +51,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
     fun setContentRouter() = coRouter {
         "/content".nest {
             before {
-                authentication.check()
+                authenticationHandler.check(it)
                 it
             }
 
