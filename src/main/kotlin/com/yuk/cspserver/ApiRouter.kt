@@ -20,7 +20,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }
-        POST("",authenticationHandler::login)
+        POST("", authenticationHandler::login)
     }
 
     @Bean
@@ -46,8 +46,13 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", archiveHandler::getAllArchive)
-            POST("",archiveHandler::addArchive)
-            DELETE("/{archvieId}",archiveHandler::deleteArchive)
+            POST("", archiveHandler::addArchive)
+            DELETE("/{archiveId}", archiveHandler::deleteArchive)
+
+            "/{archiveId}/{storageId}".nest {
+                POST("", archiveHandler::addArchiveStorage)
+                DELETE("", archiveHandler::deleteArchiveStorage)
+            }
         }
     }
 
@@ -65,7 +70,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
 
             "/{contentId}".nest {
                 GET("", contentHandler::getContent)
-                DELETE("",contentHandler::deleteContent)
+                DELETE("", contentHandler::deleteContent)
 
                 POST("")
                 accept(MediaType.MULTIPART_FORM_DATA)
@@ -74,7 +79,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             "/{contentId}/{elementId}".nest {
-                HEAD("",contentHandler::getContentElement)
+                HEAD("", contentHandler::getContentElement)
                 GET("", contentHandler::getContentFile)
                 DELETE("", contentHandler::deleteContentElement)
             }

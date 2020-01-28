@@ -1,11 +1,14 @@
 package com.yuk.cspserver.storage
 
+import com.yuk.cspserver.archive.archivestorage.ArchiveStorageComponent
+import com.yuk.cspserver.common.BadRequestException
 import com.yuk.cspserver.storage.strategy.DiskStrategy
 import org.springframework.stereotype.Service
 
 @Service
 class StorageService(private val storageCommandDAO: StorageCommandDAO,
-                     private val storageQueryDAO: StorageQueryDAO) {
+                     private val storageQueryDAO: StorageQueryDAO,
+                     private val archiveStorageComponent: ArchiveStorageComponent) {
 
     suspend fun findStorageList(storageIdList: List<Int>) =
             storageQueryDAO.findStorages(storageIdList)
@@ -25,7 +28,10 @@ class StorageService(private val storageCommandDAO: StorageCommandDAO,
             }
 
     suspend fun deleteStorage(storageId: String) {
-        //TODO :: check archive and element
+        archiveStorageComponent.findByStorageId(storageId)?.run{
+            throw BadRequestException("current delete target storage contain by archive. archiveId is ${this.archiveId}")
+        }
+        //TODO :: check element
         storageCommandDAO.deleteStorage(storageId)
     }
 

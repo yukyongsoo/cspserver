@@ -22,4 +22,20 @@ class ArchiveHandler(private val archiveService: ArchiveService) {
         archiveService.deleteArchive(archiveId)
         return ServerResponse.ok().buildAndAwait()
     }
+
+    suspend fun addArchiveStorage(serverRequest: ServerRequest): ServerResponse {
+        val archiveId = serverRequest.pathVariable("archiveId").toInt()
+        val storageId = serverRequest.pathVariable("storageId").toInt()
+        archiveService.addArchiveStorage(archiveId,storageId)
+        return ServerResponse.ok().buildAndAwait()
+
+    }
+
+    suspend fun deleteArchiveStorage(serverRequest: ServerRequest): ServerResponse {
+        val archiveId = serverRequest.pathVariable("archiveId").toInt()
+        val storageId = serverRequest.pathVariable("storageId").toInt()
+        archiveService.deleteArchiveStorage(archiveId,storageId)
+        return ServerResponse.ok().buildAndAwait()
+
+    }
 }
