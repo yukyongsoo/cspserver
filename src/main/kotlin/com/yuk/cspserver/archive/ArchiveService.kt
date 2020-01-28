@@ -42,6 +42,9 @@ class ArchiveService(private val archiveQueryDAO: ArchiveQueryDAO,
     }
 
     suspend fun addArchiveStorage(archiveId: Int, storageId: Int) {
+        getArchive(archiveId)
+        storageService.getStorage(storageId)
+
         archiveStorageComponent.addArchiveStorage(archiveId,storageId)
     }
 

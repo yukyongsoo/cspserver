@@ -32,7 +32,10 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", storageHandler::getAllStorage)
-            POST("", storageHandler::addStorage)
+
+            POST("")
+            accept(MediaType.APPLICATION_JSON,storageHandler::addStorage)
+
             DELETE("/{storageId}", storageHandler::deleteStorage)
         }
     }
@@ -46,7 +49,9 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", archiveHandler::getAllArchive)
-            POST("", archiveHandler::addArchive)
+            POST("")
+            accept(MediaType.APPLICATION_JSON,archiveHandler::addArchive)
+
             DELETE("/{archiveId}", archiveHandler::deleteArchive)
 
             "/{archiveId}/{storageId}".nest {
