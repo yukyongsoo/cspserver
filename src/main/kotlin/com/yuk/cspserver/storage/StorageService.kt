@@ -18,11 +18,26 @@ class StorageService(private val storageCommandDAO: StorageCommandDAO,
                 getStorageDto(this)
             } ?: throw IllegalStateException("can't find any storage for $storageId")
 
-    private fun getStorageDto(storageEntity: StorageEntity) =
-            when (storageEntity.type) {
-                1 -> StorageDTO(storageEntity.id, storageEntity.name, storageEntity.path, storageEntity.usable, DiskStrategy())
-                2 -> StorageDTO(storageEntity.id, storageEntity.name, storageEntity.path, storageEntity.usable, DiskStrategy())
+
+    suspend fun getAllStorage() =
+            storageQueryDAO.getAllStorage().map {
+                getStorageDto(it)
+            }
+
+    suspend fun deleteStorage(storageId: String) {
+        //TODO :: check archive and element
+        storageCommandDAO.deleteStorage(storageId)
+    }
+
+    suspend fun addStorage(storageRequest: StorageRequestDto) {
+        storageCommandDAO.addStorage(storageRequest.name, storageRequest.path, storageRequest.type)
+    }
+
+    private fun getStorageDto(storageReadEntity: StorageReadEntity) =
+            when (storageReadEntity.type) {
+                1 -> StorageDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.DISK, storageReadEntity.usable, DiskStrategy())
+                2 -> StorageDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.S3, storageReadEntity.usable, DiskStrategy())
                 else ->
-                    throw IllegalStateException("can't find storage Strategy for type ${storageEntity.type} for storage. storage Id is ${storageEntity.id}")
+                    throw IllegalStateException("can't find storage Strategy for type ${storageReadEntity.type} for storage. storage Id is ${storageReadEntity.id}")
             }
 }

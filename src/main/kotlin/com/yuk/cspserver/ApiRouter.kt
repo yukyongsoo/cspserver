@@ -32,6 +32,8 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", storageHandler::getAllStorage)
+            POST("", storageHandler::addStorage)
+            DELETE("/{storageId}", storageHandler::deleteStorage)
         }
     }
 
@@ -44,6 +46,8 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", archiveHandler::getAllArchive)
+            POST("",archiveHandler::addArchive)
+            DELETE("/{archvieId}",archiveHandler::deleteArchive)
         }
     }
 

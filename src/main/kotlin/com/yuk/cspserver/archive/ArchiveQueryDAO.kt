@@ -10,13 +10,19 @@ import org.springframework.stereotype.Component
 @Component
 class ArchiveQueryDAO(private val databaseClient: DatabaseClient) {
     suspend fun getAllArchive() =
-            databaseClient.select().from(ArchiveEntity::class.java)
+            databaseClient.select().from(ArchiveReadEntity::class.java)
                     .`as`(ArchiveDTO::class.java)
                     .flow().toList()
 
     suspend fun getArchive(archiveId: Int) =
-            databaseClient.select().from(ArchiveEntity::class.java)
+            databaseClient.select().from(ArchiveReadEntity::class.java)
                     .matching(where("id").`is`(archiveId))
+                    .`as`(ArchiveDTO::class.java)
+                    .awaitOneOrNull()
+
+    suspend fun findByName(name: String) =
+            databaseClient.select().from(ArchiveReadEntity::class.java)
+                    .matching(where("name").`is`(name))
                     .`as`(ArchiveDTO::class.java)
                     .awaitOneOrNull()
 }
