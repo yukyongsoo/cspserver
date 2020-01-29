@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArchiveStorageQueryDAO(private val databaseClient: DatabaseClient) {
-    suspend fun getStorageList(id: Int) =
+    suspend fun getStorageList(archiveId: Int) =
             databaseClient.select().from(ArchiveStorageEntity::class.java)
+                    .matching(where("archiveId").`is`(archiveId))
                     .`as`(ArchiveStorageDTO::class.java)
                     .all().asFlow().toList()
 

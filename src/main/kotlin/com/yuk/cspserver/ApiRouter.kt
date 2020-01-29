@@ -33,9 +33,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
 
             GET("", storageHandler::getAllStorage)
 
-            POST("")
-            accept(MediaType.APPLICATION_JSON,storageHandler::addStorage)
-
+            POST("").and(accept(MediaType.APPLICATION_JSON))(storageHandler::addStorage)
             DELETE("/{storageId}", storageHandler::deleteStorage)
         }
     }
@@ -49,8 +47,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             GET("", archiveHandler::getAllArchive)
-            POST("")
-            accept(MediaType.APPLICATION_JSON,archiveHandler::addArchive)
+            POST("").and(accept(MediaType.APPLICATION_JSON))(archiveHandler::addArchive)
 
             DELETE("/{archiveId}", archiveHandler::deleteArchive)
 
@@ -70,17 +67,19 @@ class ApiRouter(private val storageHandler: StorageHandler,
             }
 
             POST("")
-            accept(MediaType.APPLICATION_JSON)
-            contentType(MediaType.APPLICATION_JSON, contentHandler::createContent)
+                    .and(accept(MediaType.APPLICATION_JSON))
+                    .and(contentType(MediaType.APPLICATION_JSON))
+            (contentHandler::createContent)
 
             "/{contentId}".nest {
                 GET("", contentHandler::getContent)
                 DELETE("", contentHandler::deleteContent)
 
                 POST("")
-                accept(MediaType.MULTIPART_FORM_DATA)
-                contentType(MediaType.APPLICATION_JSON)
-                queryParam("elementTypeId", { true }, contentHandler::createContentElement)
+                        .and(accept(MediaType.MULTIPART_FORM_DATA))
+                        .and(contentType(MediaType.APPLICATION_JSON))
+                        .and(queryParam("elementTypeId", { true }))
+                (contentHandler::createContentElement)
             }
 
             "/{contentId}/{elementId}".nest {
