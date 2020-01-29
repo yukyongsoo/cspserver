@@ -10,7 +10,7 @@ class AuthenticationService(private val authentication: Authentication) {
             authentication.check(headers)
         }
         catch (e : Exception){
-            throw AuthException("login check Fail",e)
+            throw AuthException("token check Fail",e)
         }
     }
 
@@ -19,7 +19,7 @@ class AuthenticationService(private val authentication: Authentication) {
             return authentication.login(headers,body)
         }
         catch (e : Exception){
-            throw AuthException("login check Fail",e)
+            throw AuthException("login Fail",e)
         }
     }
 }

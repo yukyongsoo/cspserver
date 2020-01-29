@@ -20,7 +20,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
     @Bean
     fun setRootRouter() = coRouter {
         GET("") { ServerResponse.ok().buildAndAwait() }
-        POST("", authenticationHandler::login)
+        POST("/login", authenticationHandler::login)
     }
 
     @Bean
