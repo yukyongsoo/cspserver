@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 class ArchiveStorageComponent(private val archiveStorageQueryDAO: ArchiveStorageQueryDAO,
                               private val archiveStorageCommandDAO: ArchiveStorageCommandDAO) {
-    suspend fun getStorageList(archiveId: Int) =
+    suspend fun findByArchiveId(archiveId: Int) =
             archiveStorageQueryDAO.getStorageList(archiveId)
 
     suspend fun findByStorageId(storageId: String) =
@@ -19,14 +19,10 @@ class ArchiveStorageComponent(private val archiveStorageQueryDAO: ArchiveStorage
         findByArchiveIdAndStorageId(archiveId, storageId)?.run {
             throw BadRequestException("storage already contain for archive. archiveId : $archiveId , storageId : $storageId")
         }
-
         archiveStorageCommandDAO.addArchiveStorage(archiveId, storageId)
     }
 
     suspend fun deleteArchiveStorage(archiveId: Int, storageId: Int) {
-
-
         archiveStorageCommandDAO.deleteArchiveStorage(archiveId,storageId)
     }
-
 }

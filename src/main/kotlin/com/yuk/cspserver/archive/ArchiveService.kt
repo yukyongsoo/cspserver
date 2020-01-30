@@ -1,7 +1,6 @@
 package com.yuk.cspserver.archive
 
 import com.yuk.cspserver.archive.archivestorage.ArchiveStorageComponent
-import com.yuk.cspserver.archive.archivestorage.ArchiveStorageQueryDAO
 import com.yuk.cspserver.common.BadRequestException
 import com.yuk.cspserver.storage.StorageDTO
 import com.yuk.cspserver.storage.StorageService
@@ -15,19 +14,24 @@ class ArchiveService(private val archiveQueryDAO: ArchiveQueryDAO,
 
     suspend fun getAllArchive() = archiveQueryDAO.getAllArchive()
 
-    suspend fun getArchive(archiveId: Int) : ArchiveDTO {
-        return archiveQueryDAO.getArchive(archiveId) ?: throw IllegalStateException("archive $archiveId is not found")
+    suspend fun getArchive(archiveId: Int): ArchiveDetailDTO {
+        val archive = archiveQueryDAO.getArchive(archiveId)
+                ?: throw IllegalStateException("archive $archiveId is not found")
+        val storageIdList = archiveStorageComponent.findByArchiveId(archiveId).map { it.storageId }
+        val storageList = storageService.findStorageList(storageIdList)
+        return ArchiveDetailDTO(archive, storageList)
     }
 
     suspend fun getUsableStorage(archiveId: Int): StorageDTO {
-        val assignedList = archiveStorageComponent.getStorageList(archiveId)
+        val assignedList = archiveStorageComponent.findByArchiveId(archiveId)
         val storageList = storageService.findStorageList(assignedList.map { it.storageId })
 
-        return storageList.firstOrNull { it.usable } ?: throw IllegalStateException("can't find any usable storage in archive . $archiveId")
+        return storageList.firstOrNull { it.usable }
+                ?: throw IllegalStateException("can't find any usable storage in archive . $archiveId")
     }
 
     suspend fun deleteArchive(archiveId: Int) {
-        if(archiveStorageComponent.getStorageList(archiveId).isNotEmpty())
+        if (archiveStorageComponent.findByArchiveId(archiveId).isNotEmpty())
             throw BadRequestException("archive $archiveId has contain storage. please remove first")
 
         archiveCommandDAO.deleteArchive(archiveId)

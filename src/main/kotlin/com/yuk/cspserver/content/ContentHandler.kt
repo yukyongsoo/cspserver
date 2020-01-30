@@ -1,5 +1,6 @@
 package com.yuk.cspserver.content
 
+import com.yuk.cspserver.common.toIntCheck
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileWriterPart
 import kotlinx.coroutines.reactive.awaitFirst
@@ -31,7 +32,7 @@ class ContentHandler(private val contentService: ContentService) {
 
     suspend fun createContentElement(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementTypeId = serverRequest.queryParamOrNull("elementTypeId")?.toInt()
+        val elementTypeId = serverRequest.queryParamOrNull("elementTypeId")?.toIntCheck()
                 ?: throw IllegalArgumentException("query String elementTypeId not Found")
         val fileParts = serverRequest.awaitMultipartData()["file"]
                 ?: throw IllegalArgumentException("file part not found")
@@ -44,20 +45,20 @@ class ContentHandler(private val contentService: ContentService) {
 
     suspend fun getContentElement(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementId = serverRequest.pathVariable("elementId").toInt()
+        val elementId = serverRequest.pathVariable("elementId").toIntCheck()
         return ServerResponse.ok().bodyValueAndAwait(contentService.getContentElement(contentId, elementId))
     }
 
     suspend fun getContentFile(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementId = serverRequest.pathVariable("elementId").toInt()
+        val elementId = serverRequest.pathVariable("elementId").toIntCheck()
         val resource = contentService.getContentFile(contentId, elementId).getResource()
         return ServerResponse.ok().body(BodyInserters.fromResource(resource)).awaitFirst()
     }
 
     suspend fun deleteContentElement(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
-        val elementId = serverRequest.pathVariable("elementId").toInt()
+        val elementId = serverRequest.pathVariable("elementId").toIntCheck()
         contentService.deleteContentElement(contentId,elementId)
         return ServerResponse.ok().buildAndAwait()
     }
