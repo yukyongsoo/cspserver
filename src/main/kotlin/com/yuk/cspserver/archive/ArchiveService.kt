@@ -2,6 +2,7 @@ package com.yuk.cspserver.archive
 
 import com.yuk.cspserver.archive.archivestorage.ArchiveStorageComponent
 import com.yuk.cspserver.common.BadRequestException
+import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.storage.StorageDTO
 import com.yuk.cspserver.storage.StorageService
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ class ArchiveService(private val archiveQueryDAO: ArchiveQueryDAO,
 
     suspend fun getArchive(archiveId: Int): ArchiveDetailDTO {
         val archive = archiveQueryDAO.getArchive(archiveId)
-                ?: throw IllegalStateException("archive $archiveId is not found")
+                ?: throw BadStateException("archive $archiveId is not found")
         val storageIdList = archiveStorageComponent.findByArchiveId(archiveId).map { it.storageId }
         val storageList = storageService.findStorageList(storageIdList)
         return ArchiveDetailDTO(archive, storageList)
@@ -27,7 +28,7 @@ class ArchiveService(private val archiveQueryDAO: ArchiveQueryDAO,
         val storageList = storageService.findStorageList(assignedList.map { it.storageId })
 
         return storageList.firstOrNull { it.usable }
-                ?: throw IllegalStateException("can't find any usable storage in archive . $archiveId")
+                ?: throw BadStateException("can't find any usable storage in archive . $archiveId")
     }
 
     suspend fun deleteArchive(archiveId: Int) {

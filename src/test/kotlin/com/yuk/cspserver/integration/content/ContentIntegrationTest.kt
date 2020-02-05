@@ -1,5 +1,6 @@
 package com.yuk.cspserver.integration.content
 
+import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.content.ContentRequestDTO
 import com.yuk.cspserver.content.ContentResponseDTO
 import com.yuk.cspserver.element.ElementResponseDTO
@@ -83,7 +84,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
                 .exchange()
                 .expectStatus().is2xxSuccessful
                 .returnResult<String>(String::class.java)
-                .responseBody.blockFirst() ?: throw IllegalStateException("making test element fail")
+                .responseBody.blockFirst() ?: throw BadStateException("making test element fail")
     }
 
     @Test

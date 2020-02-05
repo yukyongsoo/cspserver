@@ -1,11 +1,11 @@
 package com.yuk.cspserver.element.file
 
 import com.yuk.cspserver.archive.ArchiveService
+import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
 import com.yuk.cspserver.storage.StorageService
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 
 @Component
 class ElementFileComponent(private val elementFileQueryDAO: ElementFileQueryDAO,
@@ -21,12 +21,12 @@ class ElementFileComponent(private val elementFileQueryDAO: ElementFileQueryDAO,
     suspend fun getFile(elementId: Int, contentId: String): ElementFileReader {
         val elementFile = elementFileQueryDAO.getElementFile(elementId)
         if (elementFile.isEmpty())
-            throw IllegalStateException("can't find any file for element. elementId is $elementId")
+            throw BadStateException("can't find any file for element. elementId is $elementId")
         elementFile.forEachIndexed { _, elementFileEntity ->
             val storage = storageService.getStorage(elementFileEntity.storageId)
             return storage.strategy.getFile(elementId, storage.path, contentId)
         }
-        throw IllegalStateException("can't get any file from storage. check you storage Data. id is $elementId")
+        throw BadStateException("can't get any file from storage. check you storage Data. id is $elementId")
     }
 
     suspend fun deleteFile(elementId: Int, contentId: String) {

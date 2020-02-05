@@ -1,5 +1,6 @@
 package com.yuk.cspserver.content
 
+import com.yuk.cspserver.common.BadRequestException
 import com.yuk.cspserver.common.toIntCheck
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileWriterPart
@@ -14,7 +15,7 @@ import java.net.URI
 class ContentHandler(private val contentService: ContentService) {
     suspend fun createContent(serverRequest: ServerRequest): ServerResponse {
         val contentRequest = serverRequest.awaitBodyOrNull<ContentRequestDTO>()
-                ?: throw IllegalArgumentException("request body not found")
+                ?: throw BadRequestException("request body not found")
         val contentId = contentService.createContent(contentRequest)
         return ServerResponse.created(URI.create("/content/$contentId")).bodyValueAndAwait(contentId)
     }
@@ -33,11 +34,11 @@ class ContentHandler(private val contentService: ContentService) {
     suspend fun createContentElement(serverRequest: ServerRequest): ServerResponse {
         val contentId = serverRequest.pathVariable("contentId")
         val elementTypeId = serverRequest.queryParamOrNull("elementTypeId")?.toIntCheck()
-                ?: throw IllegalArgumentException("query String elementTypeId not Found")
+                ?: throw BadRequestException("query String elementTypeId not Found")
         val fileParts = serverRequest.awaitMultipartData()["file"]
-                ?: throw IllegalArgumentException("file part not found")
+                ?: throw BadRequestException("file part not found")
         val file = if (fileParts.size == 1) fileParts[0] as FilePart
-        else throw IllegalArgumentException("only one file upload for save. you have ${fileParts.size}")
+        else throw BadRequestException("only one file upload for save. you have ${fileParts.size}")
         val element = ElementRequestDTO(contentId, elementTypeId, ElementFileWriterPart(file))
         val elementId = contentService.createContentElement(element)
         return ServerResponse.created(URI.create("/content/${element.contentId}/$elementId")).bodyValueAndAwait(elementId)
