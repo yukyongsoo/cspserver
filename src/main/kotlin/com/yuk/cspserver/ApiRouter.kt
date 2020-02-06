@@ -3,6 +3,7 @@ package com.yuk.cspserver
 import com.yuk.cspserver.archive.ArchiveHandler
 import com.yuk.cspserver.authentication.AuthenticationHandler
 import com.yuk.cspserver.content.ContentHandler
+import com.yuk.cspserver.metadata.MetaDataHandler
 import com.yuk.cspserver.storage.StorageHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,6 +16,7 @@ import org.springframework.web.reactive.function.server.coRouter
 class ApiRouter(private val storageHandler: StorageHandler,
                 private val archiveHandler: ArchiveHandler,
                 private val contentHandler: ContentHandler,
+                private val metaDataHandler: MetaDataHandler,
                 private val authenticationHandler: AuthenticationHandler) {
 
     @Bean
@@ -90,5 +92,18 @@ class ApiRouter(private val storageHandler: StorageHandler,
         }
     }
 
+    @Bean
+    fun setMetaDataRouter() = coRouter {
+        "/metadata".nest {
+            before {
+                authenticationHandler.check(it)
+                it
+            }
 
+
+
+
+
+        }
+    }
 }
