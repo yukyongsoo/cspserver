@@ -100,8 +100,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
                 it
             }
 
-
-
+            DELETE("",metaDataHandler::deleteMetaData)
 
 
         }
