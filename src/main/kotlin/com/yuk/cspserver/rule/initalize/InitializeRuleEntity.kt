@@ -1,4 +1,4 @@
-package com.yuk.cspserver.element.rule.initalize
+package com.yuk.cspserver.rule.initalize
 
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table

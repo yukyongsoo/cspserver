@@ -1,4 +1,4 @@
-package com.yuk.cspserver.element.rule.initalize
+package com.yuk.cspserver.rule.initalize
 
 import org.springframework.stereotype.Component
 

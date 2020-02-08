@@ -1,4 +1,4 @@
-package com.yuk.cspserver.element.rule
+package com.yuk.cspserver.rule
 
 enum class ElementRuleType(val typeId : Int) {
     INITIALIZE(1),

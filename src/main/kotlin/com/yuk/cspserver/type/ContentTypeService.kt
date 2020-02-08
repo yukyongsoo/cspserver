@@ -1,4 +1,4 @@
-package com.yuk.cspserver.type.type
+package com.yuk.cspserver.type
 
 import org.springframework.stereotype.Service
 

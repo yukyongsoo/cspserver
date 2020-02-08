@@ -1,7 +1,7 @@
-package com.yuk.cspserver.element.rule.constraint
+package com.yuk.cspserver.rule.constraint
 
-import com.yuk.cspserver.element.rule.ElementRuleDTO
-import com.yuk.cspserver.element.rule.ElementRuleType
+import com.yuk.cspserver.rule.ElementRuleDTO
+import com.yuk.cspserver.rule.ElementRuleType
 
 class ConstraintRuleDTO(elementTypeId: Int,
                         ruleId: Int,

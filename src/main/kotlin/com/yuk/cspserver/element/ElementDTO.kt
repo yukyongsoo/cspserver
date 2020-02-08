@@ -1,7 +1,6 @@
 package com.yuk.cspserver.element
 
 import com.yuk.cspserver.element.file.filepart.ElementFileWriter
-import com.yuk.cspserver.metadata.MetadataContainer
 
 data class ElementRequestDTO(val contentId: String, val elementTypeId: Int, val elementFileWriter: ElementFileWriter)
 

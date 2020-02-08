@@ -1,7 +1,7 @@
-package com.yuk.cspserver.element.rule
+package com.yuk.cspserver.rule
 
-import com.yuk.cspserver.element.rule.initalize.InitializeRuleDTO
-import com.yuk.cspserver.element.rule.initalize.InitializeRuleEntity
+import com.yuk.cspserver.rule.initalize.InitializeRuleDTO
+import com.yuk.cspserver.rule.initalize.InitializeRuleEntity
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.data.r2dbc.core.DatabaseClient
@@ -18,6 +18,6 @@ class ElementRuleQueryDAO(private val databaseClient: DatabaseClient) {
                     .bind("ruleType",(elementRuleType.typeId))
                     .`as`(InitializeRuleEntity::class.java)
                     .fetch().all().map {
-                        InitializeRuleDTO(elementTypeId,it.ruleId,elementRuleType,it.archiveId)
+                        InitializeRuleDTO(elementTypeId, it.ruleId, elementRuleType, it.archiveId)
                     }.asFlow().toList()
 }

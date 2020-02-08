@@ -1,4 +1,4 @@
-package com.yuk.cspserver.type.type.type
+package com.yuk.cspserver.type
 
 import com.yuk.cspserver.common.BadStateException
 import org.springframework.stereotype.Service

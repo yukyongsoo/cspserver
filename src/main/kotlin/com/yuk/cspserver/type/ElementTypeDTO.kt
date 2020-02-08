@@ -1,3 +1,3 @@
-package com.yuk.cspserver.type.type.type
+package com.yuk.cspserver.type
 
 data class ElementTypeDTO(val id : Int)
