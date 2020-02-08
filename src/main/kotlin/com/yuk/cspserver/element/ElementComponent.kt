@@ -4,7 +4,7 @@ import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.element.file.ElementFileComponent
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
 import com.yuk.cspserver.element.rule.ElementRuleService
-import com.yuk.cspserver.element.type.ElementTypeService
+import com.yuk.cspserver.type.type.type.ElementTypeService
 import org.springframework.stereotype.Component
 
 @Component

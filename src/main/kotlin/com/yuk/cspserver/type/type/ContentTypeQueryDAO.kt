@@ -1,4 +1,4 @@
-package com.yuk.cspserver.content.type
+package com.yuk.cspserver.type.type
 
 import org.springframework.data.r2dbc.core.DatabaseClient
 import org.springframework.data.r2dbc.core.awaitFirstOrNull

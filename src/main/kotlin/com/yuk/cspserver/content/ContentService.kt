@@ -3,11 +3,11 @@ package com.yuk.cspserver.content
 import com.yuk.cspserver.common.BadRequestException
 import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.common.ChildFoundException
-import com.yuk.cspserver.content.type.ContentTypeService
 import com.yuk.cspserver.element.ElementComponent
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.ElementResponseDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
+import com.yuk.cspserver.type.type.ContentTypeService
 import org.springframework.stereotype.Service
 import java.util.*
 
