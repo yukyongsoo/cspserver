@@ -3,20 +3,20 @@ package com.yuk.cspserver.element
 import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.element.file.ElementFileComponent
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
-import com.yuk.cspserver.rule.ElementRuleService
-import com.yuk.cspserver.type.ElementTypeService
+import com.yuk.cspserver.rule.RuleService
+import com.yuk.cspserver.type.TypeService
 import org.springframework.stereotype.Component
 
 @Component
-class ElementComponent(private val elementTypeService: ElementTypeService,
-                       private val elementRuleService: ElementRuleService,
+class ElementComponent(private val typeService: TypeService,
+                       private val ruleService: RuleService,
                        private val elementFileComponent: ElementFileComponent,
                        private val elementQueryDAO: ElementQueryDAO,
                        private val elementCommandDAO: ElementCommandDAO) {
 
     suspend fun createElement(element: ElementRequestDTO): String {
-        val elementType = elementTypeService.getType(element.elementTypeId)
-        val initializeRules = elementRuleService.getInitializeRule(elementType.id)
+        val elementType = typeService.getType(element.elementTypeId)
+        val initializeRules = ruleService.getInitializeRule(elementType.id)
         val elementId = elementCommandDAO.createElement(element.elementFileWriter.getName(), element.contentId, elementType.id)?.run { this as Int }
                 ?: throw BadStateException("can't save element, contentId is ${element.contentId}")
         initializeRules.forEach {

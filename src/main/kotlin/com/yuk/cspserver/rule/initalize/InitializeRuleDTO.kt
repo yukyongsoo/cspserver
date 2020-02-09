@@ -1,9 +1,9 @@
 package com.yuk.cspserver.rule.initalize
 
-import com.yuk.cspserver.rule.ElementRuleDTO
-import com.yuk.cspserver.rule.ElementRuleType
+import com.yuk.cspserver.rule.RuleDTO
+import com.yuk.cspserver.rule.RuleType
 
-class InitializeRuleDTO(elementTypeId: Int,
-                        ruleId: Int,
-                        elementRuleType: ElementRuleType,
-                        val archiveId : Int) : ElementRuleDTO(elementTypeId, ruleId, elementRuleType)
+class InitializeRuleDTO(id: Int,
+                        typeId: Int,
+                        ruleType: RuleType,
+                        val archiveId: Int) : RuleDTO(id, typeId, ruleType)

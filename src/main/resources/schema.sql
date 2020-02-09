@@ -39,15 +39,14 @@ create unique index INDEX_ARCHIVE_STORAGE_CONSTRAINT ON CSP_ARCHIVE_STORAGE (arc
 
 create table CSP_TYPE
 (
-    ID   int auto_increment primary key,
-    TYPE int                not null,
-    NAME varchar(30) unique not null
+    ID       int auto_increment primary key,
+    CATEGORY int                not null,
+    NAME     varchar(30) unique not null
 );
 
 create table CSP_TYPE_METADATA
 (
     TYPE_ID       int         not null,
-    TYPE_CATEGORY int         not null,
     TYPE_CLASS    int         not null,
     TYPE_NAME     varchar(36) not null,
     foreign key (TYPE_ID) references CSP_TYPE (ID)
@@ -56,12 +55,21 @@ create index INDEX_METADATA_TYPE_ID on CSP_TYPE (ID);
 
 create table CSP_TYPE_RULE
 (
-    RULE_ID   int auto_increment primary key,
+    ID        int auto_increment primary key,
     TYPE_ID   int not null,
     foreign key (TYPE_ID) references CSP_TYPE (ID),
     RULE_TYPE int not null
 );
 create index INDEX_RULE_TYPE_ID on CSP_TYPE (ID);
+
+create table CSP_ELEMENT_INIT_RULE
+(
+    RULE_ID    int not null,
+    foreign key (RULE_ID) references CSP_TYPE_RULE (ID),
+    ARCHIVE_ID int not null,
+    foreign key (ARCHIVE_ID) references CSP_ARCHIVE (ID)
+);
+CREATE INDEX INDEX_INIT_RULE_ID ON CSP_ELEMENT_INIT_RULE (RULE_ID);
 
 create table CSP_CONTENT
 (
@@ -70,15 +78,6 @@ create table CSP_CONTENT
     TYPE_ID varchar(30)  not null,
     foreign key (TYPE_ID) references CSP_TYPE (ID)
 );
-
-create table CSP_ELEMENT_INIT_RULE
-(
-    RULE_ID    int not null,
-    foreign key (RULE_ID) references CSP_TYPE_RULE (RULE_ID),
-    ARCHIVE_ID int not null,
-    foreign key (ARCHIVE_ID) references CSP_ARCHIVE (ID)
-);
-CREATE INDEX INDEX_INIT_RULE_ID ON CSP_ELEMENT_INIT_RULE (RULE_ID);
 
 create table CSP_ELEMENT
 (

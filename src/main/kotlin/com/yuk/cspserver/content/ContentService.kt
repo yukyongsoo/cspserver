@@ -7,20 +7,19 @@ import com.yuk.cspserver.element.ElementComponent
 import com.yuk.cspserver.element.ElementRequestDTO
 import com.yuk.cspserver.element.ElementResponseDTO
 import com.yuk.cspserver.element.file.filepart.ElementFileReader
-import com.yuk.cspserver.type.ContentTypeService
+import com.yuk.cspserver.type.TypeService
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class ContentService(private val contentCommandDAO: ContentCommandDAO,
                      private val contentQueryDAO: ContentQueryDAO,
-                     private val contentTypeService: ContentTypeService,
+                     private val typeService: TypeService,
                      private val elementComponent: ElementComponent) {
     suspend fun createContent(contentRequest: ContentRequestDTO): String {
-        contentTypeService.getElementType(contentRequest.contentTypeId)
-                ?: throw BadStateException("content Type Not Found. ${contentRequest.contentTypeId}")
+        val type = typeService.getContentType(contentRequest.contentTypeId)
         if (contentRequest.name.isBlank())
-            throw  BadStateException("content must have name. you request is ${contentRequest.name}")
+            throw  BadRequestException("content must have name. you request is ${contentRequest.name}")
         val contentId = UUID.randomUUID().toString()
         contentCommandDAO.createContent(contentId, contentRequest)
         return contentId
@@ -32,7 +31,7 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
             } ?: throw BadStateException("content $contentId not found")
 
     suspend fun deleteContent(contentId: String) {
-        if(elementComponent.findByContentId(contentId).isNotEmpty())
+        if (elementComponent.findByContentId(contentId).isNotEmpty())
             throw ChildFoundException("content $contentId has child Element. you must delete all Child")
         contentCommandDAO.deleteContent(contentId)
     }
@@ -56,6 +55,6 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
     }
 
     suspend fun deleteContentElement(contentId: String, elementId: Int) {
-        elementComponent.deleteElement(contentId,elementId)
+        elementComponent.deleteElement(contentId, elementId)
     }
 }

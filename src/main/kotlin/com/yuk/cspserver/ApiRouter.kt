@@ -3,8 +3,10 @@ package com.yuk.cspserver
 import com.yuk.cspserver.archive.ArchiveHandler
 import com.yuk.cspserver.authentication.AuthenticationHandler
 import com.yuk.cspserver.content.ContentHandler
-import com.yuk.cspserver.metadata.MetaDataHandler
+import com.yuk.cspserver.metadata.MetadataHandler
+import com.yuk.cspserver.rule.RuleHandler
 import com.yuk.cspserver.storage.StorageHandler
+import com.yuk.cspserver.type.TypeHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -16,7 +18,9 @@ import org.springframework.web.reactive.function.server.coRouter
 class ApiRouter(private val storageHandler: StorageHandler,
                 private val archiveHandler: ArchiveHandler,
                 private val contentHandler: ContentHandler,
-                private val metaDataHandler: MetaDataHandler,
+                private val ruleHandler: RuleHandler,
+                private val typeHandler: TypeHandler,
+                private val metaDataHandler: MetadataHandler,
                 private val authenticationHandler: AuthenticationHandler) {
 
     @Bean
@@ -80,7 +84,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
                 POST("")
                         .and(accept(MediaType.MULTIPART_FORM_DATA))
                         .and(contentType(MediaType.APPLICATION_JSON))
-                        .and(queryParam("elementTypeId", { true }))
+                        .and(queryParam("elementTypeId") { true })
                 (contentHandler::createContentElement)
             }
 
@@ -93,6 +97,30 @@ class ApiRouter(private val storageHandler: StorageHandler,
     }
 
     @Bean
+    fun setRuleRouter() = coRouter {
+        "/rule".nest {
+            before {
+                authenticationHandler.check(it)
+                it
+            }
+
+            DELETE("", ruleHandler::deleteRule)
+        }
+    }
+
+    @Bean
+    fun setTypeRouter() = coRouter {
+        "/type".nest {
+            before {
+                authenticationHandler.check(it)
+                it
+            }
+
+            DELETE("", typeHandler::deleteType)
+        }
+    }
+
+    @Bean
     fun setMetaDataRouter() = coRouter {
         "/metadata".nest {
             before {
@@ -100,7 +128,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
                 it
             }
 
-            DELETE("",metaDataHandler::deleteMetaData)
+            DELETE("", metaDataHandler::deleteMetaData)
 
 
         }
