@@ -15,7 +15,7 @@ class ElementComponent(private val typeService: TypeService,
                        private val elementCommandDAO: ElementCommandDAO) {
 
     suspend fun createElement(element: ElementRequestDTO): String {
-        val elementType = typeService.getType(element.elementTypeId)
+        val elementType = typeService.getElementType(element.elementTypeId)
         val initializeRules = ruleService.getInitializeRule(elementType.id)
         val elementId = elementCommandDAO.createElement(element.elementFileWriter.getName(), element.contentId, elementType.id)?.run { this as Int }
                 ?: throw BadStateException("can't save element, contentId is ${element.contentId}")

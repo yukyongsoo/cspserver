@@ -14,6 +14,13 @@ class TypeService(private val typeQueryDAO: TypeQueryDAO,
         return type
     }
 
+    suspend fun getElementType(elementTypeId: Int): TypeDTO {
+        val type = getType(elementTypeId)
+        if (type.category != TypeCategory.CONTENT)
+            throw BadRequestException("request type is not content Type. id is ${type.id}")
+        return type
+    }
+
     private suspend fun getType(typeId: Int): TypeDTO {
         val type = typeQueryDAO.getType(typeId)
                 ?: throw BadStateException("Type $typeId not found")
@@ -23,4 +30,5 @@ class TypeService(private val typeQueryDAO: TypeQueryDAO,
             else -> throw BadStateException("type has not supported Category. category key is ${type.category}")
         }
     }
+
 }

@@ -17,15 +17,13 @@ class RuleService(private val ruleQueryDAO: RuleQueryDAO,
     suspend fun getInitializeRule(typeId: Int): List<InitializeRuleDTO> {
         val ruleList = ruleQueryDAO.findByElementTypeIdAndRuleType(typeId, RuleType.INITIALIZE)
         val initializeRuleList = initializeRuleQueryDAO.initializeRule(ruleList.map { it.id })
-        ruleList.map {
 
-
+        val initialRuleDTOList = ruleList.map { rule ->
+            val initializeRule = initializeRuleList.first { rule.id == it.ruleId }
+            InitializeRuleDTO(rule.id, rule.typeId, RuleType.INITIALIZE, initializeRule.archiveId)
         }
 
-
-        val initialRuleList = list.map { InitializeRuleDTO(it.id, it.typeId, it.RuleType.INITIALIZE) }
-
-        return if (list.isNotEmpty()) initialRuleList
+        return if (initialRuleDTOList.isNotEmpty()) initialRuleDTOList
         else throw BadStateException("can't found any InitializeRule for elementType $typeId")
     }
 

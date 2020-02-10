@@ -17,7 +17,8 @@ class ContentService(private val contentCommandDAO: ContentCommandDAO,
                      private val typeService: TypeService,
                      private val elementComponent: ElementComponent) {
     suspend fun createContent(contentRequest: ContentRequestDTO): String {
-        val type = typeService.getContentType(contentRequest.contentTypeId)
+        typeService.getContentType(contentRequest.contentTypeId)
+
         if (contentRequest.name.isBlank())
             throw  BadRequestException("content must have name. you request is ${contentRequest.name}")
         val contentId = UUID.randomUUID().toString()
