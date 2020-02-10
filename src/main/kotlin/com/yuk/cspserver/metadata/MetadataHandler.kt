@@ -6,8 +6,13 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.buildAndAwait
 
 @Component
-class MetadataHandler {
-    suspend fun deleteMetaData(serverRequest: ServerRequest): ServerResponse {
+class MetadataHandler(private val metadataService: MetadataService) {
+    suspend fun createMetadata(serverRequest: ServerRequest) : ServerResponse {
+
+        return ServerResponse.ok().buildAndAwait()
+    }
+
+    suspend fun deleteMetadata(serverRequest: ServerRequest): ServerResponse {
         return ServerResponse.ok().buildAndAwait()
     }
 }

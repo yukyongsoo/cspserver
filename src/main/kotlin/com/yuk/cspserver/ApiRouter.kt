@@ -20,7 +20,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
                 private val contentHandler: ContentHandler,
                 private val ruleHandler: RuleHandler,
                 private val typeHandler: TypeHandler,
-                private val metaDataHandler: MetadataHandler,
+                private val metadataHandler: MetadataHandler,
                 private val authenticationHandler: AuthenticationHandler) {
 
     @Bean
@@ -91,17 +91,6 @@ class ApiRouter(private val storageHandler: StorageHandler,
         }
     }
 
-    @Bean
-    fun setRuleRouter() = coRouter {
-        "/rule".nest {
-            before {
-                authenticationHandler.check(it)
-                it
-            }
-
-            DELETE("", ruleHandler::deleteRule)
-        }
-    }
 
     @Bean
     fun setTypeRouter() = coRouter {
@@ -111,21 +100,39 @@ class ApiRouter(private val storageHandler: StorageHandler,
                 it
             }
 
-            DELETE("", typeHandler::deleteType)
+            GET("",typeHandler::getAllType)
+            GET("/{typeId}",typeHandler::getTypeDetail)
+            POST("", typeHandler::addType)
+            DELETE("/{typeId}", typeHandler::deleteType)
         }
     }
 
     @Bean
-    fun setMetaDataRouter() = coRouter {
+    fun setRuleRouter() = coRouter {
+        "/rule".nest {
+            before {
+                authenticationHandler.check(it)
+                it
+            }
+
+            GET("",ruleHandler::getAllRule)
+            GET("/{typeId}",ruleHandler::getRule)
+            POST("").and(accept(MediaType.APPLICATION_JSON))(ruleHandler::addRule)
+            DELETE("/{typeId}", ruleHandler::deleteRule)
+        }
+    }
+
+
+    @Bean
+    fun setMetadataRouter() = coRouter {
         "/metadata".nest {
             before {
                 authenticationHandler.check(it)
                 it
             }
 
-            DELETE("", metaDataHandler::deleteMetaData)
-
-
+            POST("",metadataHandler::createMetadata)
+            DELETE("", metadataHandler::deleteMetadata)
         }
     }
 }

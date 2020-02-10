@@ -46,12 +46,21 @@ create table CSP_TYPE
 
 create table CSP_TYPE_METADATA
 (
-    TYPE_ID       int         not null,
-    TYPE_CLASS    int         not null,
-    TYPE_NAME     varchar(36) not null,
+    TYPE_ID    int         not null,
+    META_CLASS int         not null,
+    META_NAME  varchar(36) not null,
     foreign key (TYPE_ID) references CSP_TYPE (ID)
 );
 create index INDEX_METADATA_TYPE_ID on CSP_TYPE (ID);
+
+create table CSP_METADATA_SET
+(
+    ID         varchar(45)  not null,
+    META_CLASS int          not null,
+    META_NAME  varchar(36)  not null,
+    META_VALUE varchar(100) not null
+);
+create index INDEX_METADATA_SET_ID on CSP_METADATA_SET (ID);
 
 create table CSP_TYPE_RULE
 (

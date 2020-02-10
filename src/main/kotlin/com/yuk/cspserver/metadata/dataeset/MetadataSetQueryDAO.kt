@@ -1,4 +1,8 @@
 package com.yuk.cspserver.metadata.dataeset
 
-class MetadataSetQueryDAO {
+import org.springframework.data.r2dbc.core.DatabaseClient
+import org.springframework.stereotype.Component
+
+@Component
+class MetadataSetQueryDAO(private val databaseClient: DatabaseClient) {
 }
