@@ -1,14 +1,11 @@
-package com.yuk.cspserver.integration.content
+package com.yuk.cspserver.integration
 
-import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.content.ContentRequestDTO
 import com.yuk.cspserver.content.ContentResponseDTO
 import com.yuk.cspserver.element.ElementResponseDTO
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
-import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -16,8 +13,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Sql("/content.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ContentIntegrationTest(private val webTestClient: WebTestClient) {
-    private val contentId = "1"
+class ContentIntegrationTest(private val webTestClient: WebTestClient,
+                             private val integrationTestUtil: IntegrationTestUtil) {
+    private val contentId = 1
     private val elementTypeId = 1
 
     @Test
@@ -43,12 +41,12 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     fun `엘리먼트 만들기`() {
-        createContentElementTest()
+        integrationTestUtil.createContentElement(contentId, elementTypeId)
     }
 
     @Test
     fun `엘리먼트 정보 가져오기`() {
-        val elementId = createContentElementTest()
+        val elementId = integrationTestUtil.createContentElement(contentId, elementTypeId)
 
         webTestClient.head()
                 .uri("/content/$contentId/$elementId")
@@ -60,7 +58,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     fun `엘리먼트 파일 가져오기`() {
-        val elementId = createContentElementTest()
+        val elementId = integrationTestUtil.createContentElement(contentId, elementTypeId)
 
         webTestClient.get()
                 .uri("/content/$contentId/$elementId")
@@ -70,22 +68,6 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
                 .returnResult().responseBody
     }
 
-    private fun createContentElementTest(): String {
-        val body = MultipartBodyBuilder()
-        body.part("file", ClassPathResource("/testFile.txt"))
-
-        return webTestClient.post()
-                .uri {
-                    it.path("/content/$contentId")
-                    it.queryParam("elementTypeId", elementTypeId)
-                    it.build()
-                }
-                .bodyValue(body.build())
-                .exchange()
-                .expectStatus().is2xxSuccessful
-                .returnResult<String>(String::class.java)
-                .responseBody.blockFirst() ?: throw BadStateException("making test element fail")
-    }
 
     @Test
     fun `컨텐츠 삭제`(){
@@ -97,7 +79,7 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
 
     @Test
     fun `엘리먼트 삭제 및 컨텐츠 폴더 정리`(){
-        val elementId = createContentElementTest()
+        val elementId = integrationTestUtil.createContentElement(contentId, elementTypeId)
 
         webTestClient.delete()
                 .uri("/content/$contentId/$elementId")
@@ -106,9 +88,9 @@ class ContentIntegrationTest(private val webTestClient: WebTestClient) {
     }
 
     @Test
-    fun `엘리먼트 삭제`(){
-        val elementId = createContentElementTest()
-        createContentElementTest()
+    fun `엘리먼트 삭제`() {
+        val elementId = integrationTestUtil.createContentElement(contentId, elementTypeId)
+        integrationTestUtil.createContentElement(contentId, elementTypeId)
 
         webTestClient.delete()
                 .uri("/content/$contentId/$elementId")

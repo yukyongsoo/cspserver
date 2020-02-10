@@ -19,8 +19,8 @@ class ArchiveHandler(private val archiveService: ArchiveService) {
     suspend fun addArchive(serverRequest: ServerRequest): ServerResponse {
         val archiveDTO = serverRequest.awaitBodyOrNull<ArchiveRequestDTO>()
                 ?: throw BadRequestException("archive request data not found. check you body data")
-        archiveService.addArchive(archiveDTO)
-        return ServerResponse.ok().buildAndAwait()
+        val archiveId = archiveService.addArchive(archiveDTO)
+        return ServerResponse.ok().bodyValueAndAwait(archiveId)
     }
 
     suspend fun deleteArchive(serverRequest: ServerRequest): ServerResponse {

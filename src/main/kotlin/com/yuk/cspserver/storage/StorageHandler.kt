@@ -19,7 +19,7 @@ class StorageHandler(private val storageService: StorageService) {
     suspend fun addStorage(serverRequest: ServerRequest) : ServerResponse {
         val storageRequest = serverRequest.awaitBodyOrNull<StorageRequestDto>()
                 ?: throw BadRequestException("storage add request has no body data.")
-        storageService.addStorage(storageRequest)
-        return ServerResponse.ok().buildAndAwait()
+        val storageId = storageService.addStorage(storageRequest)
+        return ServerResponse.ok().bodyValueAndAwait(storageId)
     }
 }

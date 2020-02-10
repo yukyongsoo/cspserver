@@ -25,25 +25,33 @@ class StorageService(private val storageCommandDAO: StorageCommandDAO,
 
     suspend fun getAllStorage() =
             storageQueryDAO.getAllStorage().map {
-                getStorageDto(it)
+                getStorageResponseDto(it)
             }
 
     suspend fun deleteStorage(storageId: String) {
-        archiveStorageComponent.findByStorageId(storageId)?.run{
+        archiveStorageComponent.findByStorageId(storageId)?.run {
             throw BadRequestException("current delete target storage contain by archive. archiveId is ${this.archiveId}")
         }
         //TODO :: check element
         storageCommandDAO.deleteStorage(storageId)
     }
 
-    suspend fun addStorage(storageRequest: StorageRequestDto) {
-        storageCommandDAO.addStorage(storageRequest.name, storageRequest.path, storageRequest.type)
+    suspend fun addStorage(storageRequest: StorageRequestDto): Int {
+        return storageCommandDAO.addStorage(storageRequest.name, storageRequest.path, storageRequest.type)
     }
 
     private fun getStorageDto(storageReadEntity: StorageReadEntity) =
             when (storageReadEntity.type) {
                 1 -> StorageDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.DISK, storageReadEntity.usable, DiskStrategy())
                 2 -> StorageDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.S3, storageReadEntity.usable, DiskStrategy())
+                else ->
+                    throw BadStateException("can't find storage Strategy for type ${storageReadEntity.type} for storage. storage Id is ${storageReadEntity.id}")
+            }
+
+    private fun getStorageResponseDto(storageReadEntity: StorageReadEntity) =
+            when (storageReadEntity.type) {
+                1 -> StorageResponseDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.DISK, storageReadEntity.usable)
+                2 -> StorageResponseDTO(storageReadEntity.id, storageReadEntity.name, storageReadEntity.path, StorageType.S3, storageReadEntity.usable)
                 else ->
                     throw BadStateException("can't find storage Strategy for type ${storageReadEntity.type} for storage. storage Id is ${storageReadEntity.id}")
             }

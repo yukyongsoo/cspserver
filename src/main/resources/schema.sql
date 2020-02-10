@@ -5,6 +5,7 @@ drop table if exists CSP_ELEMENT_INIT_RULE;
 drop table if exists CSP_CONTENT;
 
 drop table if exists CSP_TYPE_RULE;
+drop table if exists CSP_METADATA_SET;
 drop table if exists CSP_TYPE_METADATA;
 drop table if exists CSP_TYPE;
 

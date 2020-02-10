@@ -38,12 +38,12 @@ class ArchiveService(private val archiveQueryDAO: ArchiveQueryDAO,
         archiveCommandDAO.deleteArchive(archiveId)
     }
 
-    suspend fun addArchive(archiveDTO: ArchiveRequestDTO) {
+    suspend fun addArchive(archiveDTO: ArchiveRequestDTO): Int {
         archiveQueryDAO.findByName(archiveDTO.name)?.run {
             throw BadRequestException("archive name duplicated. name is ${archiveDTO.name}")
         }
 
-        archiveCommandDAO.addArchive(archiveDTO.name)
+        return archiveCommandDAO.addArchive(archiveDTO.name)
     }
 
     suspend fun addArchiveStorage(archiveId: Int, storageId: Int) {
