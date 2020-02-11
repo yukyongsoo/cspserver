@@ -4,6 +4,8 @@ import com.yuk.cspserver.archive.ArchiveRequestDTO
 import com.yuk.cspserver.common.BadStateException
 import com.yuk.cspserver.storage.StorageRequestDto
 import com.yuk.cspserver.storage.StorageType
+import com.yuk.cspserver.type.TypeCategory
+import com.yuk.cspserver.type.TypeRequestDTO
 import org.springframework.context.annotation.Lazy
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
@@ -52,5 +54,16 @@ class IntegrationTestUtil(@Lazy private val webTestClient: WebTestClient) {
                 .expectStatus().is2xxSuccessful
                 .returnResult<String>(String::class.java)
                 .responseBody.blockFirst() ?: throw BadStateException("making test element fail")
+    }
+
+    fun addType(): Int {
+        val request = TypeRequestDTO("asdf", TypeCategory.ELEMENT)
+
+        return webTestClient.post().uri("/type")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().is2xxSuccessful
+                .expectBody(Int::class.java)
+                .returnResult().responseBody!!
     }
 }

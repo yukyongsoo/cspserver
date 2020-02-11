@@ -34,9 +34,9 @@ class TypeService(private val typeQueryDAO: TypeQueryDAO,
         return type
     }
 
-    suspend fun addType(typeRequest: TypeRequestDTO) {
+    suspend fun addType(typeRequest: TypeRequestDTO): Int {
         typeQueryDAO.findByName(typeRequest.name)?.run { throw BadRequestException("type name was Duplicated.") }
-        typeCommandDAO.addType(typeRequest.name, typeRequest.category)
+        return typeCommandDAO.addType(typeRequest.name, typeRequest.category)
     }
 
     suspend fun deleteType(typeId: Int) {

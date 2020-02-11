@@ -22,8 +22,8 @@ class TypeHandler(private val typeService: TypeService) {
     suspend fun addType(serverRequest: ServerRequest): ServerResponse {
         val typeRequest = serverRequest.awaitBodyOrNull<TypeRequestDTO>()
                 ?: throw BadRequestException("current request has not Body Data")
-        typeService.addType(typeRequest)
-        return ServerResponse.ok().buildAndAwait()
+        val typeId = typeService.addType(typeRequest)
+        return ServerResponse.ok().bodyValueAndAwait(typeId)
     }
 
     suspend fun deleteType(serverRequest: ServerRequest): ServerResponse {
