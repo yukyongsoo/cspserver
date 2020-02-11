@@ -1,13 +1,12 @@
 package com.yuk.cspserver.rule
 
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.buildAndAwait
+import org.springframework.web.reactive.function.server.*
 
 @Component
 class RuleHandler(private val ruleService: RuleService) {
     suspend fun addRule(serverRequest: ServerRequest) : ServerResponse{
+        //TODO:: makeAddRule
         return ServerResponse.ok().buildAndAwait()
     }
 
@@ -16,10 +15,13 @@ class RuleHandler(private val ruleService: RuleService) {
     }
 
     suspend fun getAllRule(serverRequest: ServerRequest) : ServerResponse {
-        return ServerResponse.ok().buildAndAwait()
+        val ruleList = ruleService.getAllRule()
+        return ServerResponse.ok().bodyValueAndAwait(ruleList)
     }
 
-    suspend fun getRule(serverRequest: ServerRequest) : ServerResponse {
-        return ServerResponse.ok().buildAndAwait()
+    suspend fun getTypeRule(serverRequest: ServerRequest) : ServerResponse {
+        val typeId = serverRequest.pathVariable("typeId")
+        val ruleList = ruleService.getTypeRules(typeId)
+        return ServerResponse.ok().bodyValueAndAwait(ruleList)
     }
 }

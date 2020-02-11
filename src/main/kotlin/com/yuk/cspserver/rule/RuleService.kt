@@ -15,7 +15,7 @@ class RuleService(private val ruleQueryDAO: RuleQueryDAO,
                   private val archiveService: ArchiveService) {
 
     suspend fun getInitializeRule(typeId: Int): List<InitializeRuleDTO> {
-        val ruleList = ruleQueryDAO.findByElementTypeIdAndRuleType(typeId, RuleType.INITIALIZE)
+        val ruleList = ruleQueryDAO.findByTypeIdAndRuleType(typeId, RuleType.INITIALIZE)
         val initializeRuleList = initializeRuleQueryDAO.initializeRule(ruleList.map { it.id })
 
         val initialRuleDTOList = ruleList.map { rule ->
@@ -31,5 +31,26 @@ class RuleService(private val ruleQueryDAO: RuleQueryDAO,
         val ruleId = ruleCommandDAO.createRule(typeId, RuleType.INITIALIZE.typeId)
         archiveService.getArchive(archiveId)
         initializeRuleCommandDAO.createInitializeRule(ruleId, archiveId)
+    }
+
+    suspend fun getAllRule() =
+            ruleQueryDAO.getAllRule().map {
+                convertEntityToDTO(it)
+            }
+
+    suspend fun getTypeRules(typeId: String) =
+        ruleQueryDAO.findByTypeId(typeId).map {
+            convertEntityToDTO(it)
+        }
+
+    private fun convertEntityToDTO(ruleReadEntity: RuleReadEntity): RuleReadDTO {
+        return when (ruleReadEntity.ruleType) {
+            1 -> RuleReadDTO(ruleReadEntity.id, ruleReadEntity.typeId, RuleType.INITIALIZE)
+            2 -> RuleReadDTO(ruleReadEntity.id, ruleReadEntity.typeId, RuleType.MIGRATION)
+            3 -> RuleReadDTO(ruleReadEntity.id, ruleReadEntity.typeId, RuleType.RETENTION)
+            else ->
+                throw BadStateException("current rule has not support type. rule id is ${ruleReadEntity.id}")
+        }
+
     }
 }
