@@ -118,7 +118,7 @@ class ApiRouter(private val storageHandler: StorageHandler,
             GET("",ruleHandler::getAllRule)
             GET("/{typeId}",ruleHandler::getTypeRule)
             POST("").and(accept(MediaType.APPLICATION_JSON))(ruleHandler::addRule)
-            DELETE("/{typeId}", ruleHandler::deleteRule)
+            DELETE("/{typeId}/{ruleId}", ruleHandler::deleteRule)
         }
     }
 
