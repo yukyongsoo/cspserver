@@ -95,8 +95,8 @@ create table CSP_ELEMENT
     NAME       varchar(128) not null,
     CONTENT_ID varchar(45)  not null,
     foreign key (CONTENT_ID) references CSP_CONTENT (ID),
-    TYPE       int          not null,
-    foreign key (TYPE) references CSP_TYPE (ID)
+    TYPE_ID    int          not null,
+    foreign key (TYPE_ID) references CSP_TYPE (ID)
 );
 CREATE INDEX INDEX_ELEMENT_CONTENT_ID ON CSP_ELEMENT (CONTENT_ID);
 

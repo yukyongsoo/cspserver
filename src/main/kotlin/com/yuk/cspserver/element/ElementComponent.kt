@@ -27,7 +27,7 @@ class ElementComponent(private val typeService: TypeService,
 
     suspend fun getElement(elementId: Int) =
             elementQueryDAO.getElement(elementId)?.run {
-                ElementResponseDTO(this.id, this.contentId, this.type, this.name)
+                ElementResponseDTO(this.id, this.contentId, this.typeId, this.name)
             } ?: throw BadStateException("can't get element, elementID is $elementId")
 
     suspend fun getElementFile(elementId: Int): ElementFileReader {
@@ -37,7 +37,7 @@ class ElementComponent(private val typeService: TypeService,
 
     suspend fun findByContentId(contentId: String) =
             elementQueryDAO.getElementByContentId(contentId).map {
-                ElementResponseDTO(it.id, it.contentId, it.type, it.name)
+                ElementResponseDTO(it.id, it.contentId, it.typeId, it.name)
             }
 
     suspend fun deleteElement(contentId: String, elementId: Int) {
