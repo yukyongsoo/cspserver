@@ -1,4 +1,4 @@
 package com.yuk.cspserver.archive.archivestorage
 
-class ArchiveStorageDTO {
-}
+data class ArchiveStorageDTO(val archiveId: Int,
+                             val storageId: Int)
